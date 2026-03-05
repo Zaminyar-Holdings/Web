@@ -6,19 +6,27 @@
     <title>Zaminyar Holdings | Autonomous Wealth Creation</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
+/* ==========================================
+   CSS VARIABLES
+   ========================================== */
 :root {
-    --black: #0a0a0a;
-    --dark-gray: #161616;
-    --mid-gray: #242424;
-    --light-gray: #3a3a3a;
-    --white: #f5f5f5;
-    --accent: #d4af37;
-    --accent-dim: #8b7523;
-    --accent-bright: #ffd700;
-    --grid-color: rgba(212, 175, 55, 0.1);
-    --text-secondary: #9a9a9a;
+    --bg-primary: #040812;
+    --bg-secondary: #0a1020;
+    --bg-card: #0d1528;
+    --bg-card-hover: #111d38;
+    --border: rgba(56, 130, 255, 0.08);
+    --border-hover: rgba(56, 130, 255, 0.2);
+    --white: #f0f4ff;
+    --text-dim: #6b7a99;
+    --text-mid: #8fa4c8;
+    --accent: #3882ff;
+    --accent-bright: #60a0ff;
+    --accent-glow: rgba(56, 130, 255, 0.15);
+    --accent-gold: #d4af37;
+    --gradient-start: #3882ff;
+    --gradient-end: #a855f7;
 }
 
 * {
@@ -27,32 +35,59 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
+
 body {
-    font-family: 'Cormorant Garamond', serif;
-    background: var(--black);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-primary);
     color: var(--white);
     line-height: 1.6;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-/* Navigation */
+/* Full-page background image */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('Image.png') center center / cover no-repeat;
+    filter: blur(3px);
+    opacity: 0.08;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* ==========================================
+   NAVIGATION
+   ========================================== */
 .nav {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: 1000;
-    background: rgba(10, 10, 10, 0.95);
+    transition: all 0.4s ease;
+}
+
+.nav.scrolled {
+    background: rgba(4, 8, 18, 0.85);
     backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(212, 175, 55, 0.1);
-    padding: 1rem 0;
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
 }
 
 .nav-container {
-    max-width: 1400px;
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 0 3rem;
+    padding: 1.25rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -61,615 +96,1059 @@ body {
 .logo {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.9rem;
-    letter-spacing: 2px;
-    font-weight: 500;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: var(--white);
 }
 
 .logo-image {
-    height: 50px;
+    height: 40px;
     width: auto;
     display: block;
 }
 
+.logo-text {
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: -0.3px;
+}
+
 .nav-links {
     display: flex;
-    gap: 2.5rem;
+    gap: 0.5rem;
     align-items: center;
 }
 
 .nav-links a {
-    color: var(--white);
+    color: var(--text-mid);
     text-decoration: none;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.8rem;
-    letter-spacing: 1px;
-    transition: all 0.3s ease;
-    position: relative;
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
 }
 
-.nav-links a::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 0;
-    height: 1px;
-    background: var(--accent);
-    transition: width 0.3s ease;
+.nav-links a:hover {
+    color: var(--white);
+    background: rgba(255, 255, 255, 0.05);
 }
 
-.nav-links a:hover::after {
+.nav-cta {
+    background: var(--accent) !important;
+    color: var(--white) !important;
+    padding: 0.5rem 1.25rem !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+}
+
+.nav-cta:hover {
+    background: var(--accent-bright) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(56, 130, 255, 0.3);
+}
+
+/* Mobile Nav */
+.nav-toggle {
+    display: none;
+    width: 28px;
+    height: 20px;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+.nav-toggle span {
     width: 100%;
+    height: 2px;
+    background: var(--white);
+    border-radius: 2px;
+    transition: all 0.3s ease;
 }
 
-/* Hero Section */
+.nav-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+.nav-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+.nav-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* ==========================================
+   HERO SECTION
+   ========================================== */
 .hero {
     position: relative;
-    height: 85vh;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    padding-top: 5rem;
 }
 
-.hero-bg {
+/* Mouse-tracking gradient */
+.hero-glow {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, rgba(10, 10, 10, 0.7), rgba(22, 22, 22, 0.8)),
-                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23161616" width="1200" height="800"/></svg>');
-    background-size: cover;
-    background-position: center;
+    pointer-events: none;
+    z-index: 1;
 }
 
-.grid-overlay {
+.hero-glow-inner {
+    position: absolute;
+    width: 800px;
+    height: 800px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(56, 130, 255, 0.12) 0%, rgba(168, 85, 247, 0.06) 40%, transparent 70%);
+    transform: translate(-50%, -50%);
+    transition: left 0.3s ease-out, top 0.3s ease-out;
+    filter: blur(40px);
+    left: 50%;
+    top: 50%;
+}
+
+/* Static ambient gradients */
+.hero-ambient {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: 
-        linear-gradient(var(--grid-color) 1px, transparent 1px),
-        linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
-    background-size: 50px 50px;
-    opacity: 0.3;
-    animation: gridPulse 10s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
 }
 
-@keyframes gridPulse {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 0.15; }
+.hero-ambient::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 140%;
+    height: 60%;
+    background: radial-gradient(ellipse, rgba(56, 130, 255, 0.06) 0%, transparent 60%);
+}
+
+.hero-ambient::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    background: linear-gradient(to top, var(--bg-primary), transparent);
+    z-index: 2;
+}
+
+/* Grid pattern */
+.hero-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        linear-gradient(rgba(56, 130, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56, 130, 255, 0.03) 1px, transparent 1px);
+    background-size: 80px 80px;
+    z-index: 1;
+    mask-image: radial-gradient(ellipse 60% 50% at 50% 40%, black 20%, transparent 70%);
+    -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 40%, black 20%, transparent 70%);
 }
 
 .hero-content {
     position: relative;
     z-index: 10;
-    max-width: 1100px;
-    padding: 0 3rem;
+    max-width: 900px;
+    padding: 0 2rem;
     text-align: center;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 1rem;
+    background: rgba(56, 130, 255, 0.08);
+    border: 1px solid rgba(56, 130, 255, 0.15);
+    border-radius: 100px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--accent-bright);
+    margin-bottom: 2rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.6s ease 0.3s forwards;
+}
+
+.hero-badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
 }
 
 .hero-title {
-    font-size: clamp(2.5rem, 7vw, 5rem);
-    font-weight: 300;
-    line-height: 1.2;
-    margin-bottom: 2rem;
-    letter-spacing: -1px;
-    text-transform: uppercase;
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -2.5px;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.5s forwards;
+}
+
+.hero-title .gradient-text {
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .hero-subtitle {
-    font-size: 1.55rem;
-    max-width: 700px;
-    margin: 0 auto 3rem;
-    color: var(--white);
-    line-height: 1.8;
+    font-size: clamp(1.1rem, 2vw, 1.35rem);
+    color: var(--text-mid);
+    max-width: 600px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.7;
+    font-weight: 400;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.8s ease 0.8s forwards;
 }
 
-.hero-cta {
+.hero-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.8s ease 1s forwards;
+}
+
+.btn {
     display: inline-flex;
     align-items: center;
-    gap: 1rem;
-    padding: 1rem 2.5rem;
-    background: transparent;
-    border: 2px solid var(--accent);
-    color: var(--accent);
+    gap: 0.5rem;
+    padding: 0.85rem 1.75rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
     text-decoration: none;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.85rem;
-    letter-spacing: 2px;
-    transition: all 0.4s ease;
-    text-transform: uppercase;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
 }
 
-.hero-cta:hover {
+.btn-primary {
     background: var(--accent);
-    color: var(--black);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--accent-bright);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(56, 130, 255, 0.3);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--white);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
     transform: translateY(-2px);
 }
 
-/* Section Base Styles */
-.section {
+.btn-arrow {
+    transition: transform 0.3s ease;
+}
+
+.btn:hover .btn-arrow {
+    transform: translateX(3px);
+}
+
+@keyframes fadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==========================================
+   STATS BAR
+   ========================================== */
+.stats-bar {
+    position: relative;
+    z-index: 10;
     padding: 4rem 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: rgba(10, 16, 32, 0.5);
 }
 
-.section-container {
-    max-width: 1400px;
+.stats-container {
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 0 3rem;
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
 }
 
-.section-content-full {
-    max-width: 1000px;
-    margin: 0 auto;
+.stat-item {
     text-align: center;
 }
 
-.section-content-full h2 {
+.stat-number {
     font-size: 2.5rem;
-    font-weight: 400;
-    margin-bottom: 1.5rem;
-    color: var(--accent);
+    font-weight: 800;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, var(--white), var(--text-mid));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.25rem;
 }
 
-.section-content-full p {
-    font-size: 1.35rem;
-    line-height: 1.8;
-    color: var(--white);
-    margin-bottom: 1.2rem;
+.stat-label {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    font-weight: 500;
 }
 
-.section-split {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-    align-items: center;
-}
-
-.section-visual {
+/* ==========================================
+   PILLARS SECTION (front face summary)
+   ========================================== */
+.pillars {
     position: relative;
-    min-height: 400px;
-    background: var(--dark-gray);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    z-index: 10;
+    padding: 7rem 0;
+    background: var(--bg-primary);
     overflow: hidden;
 }
 
-.visual-placeholder {
-    width: 100%;
-    height: 100%;
+.pillars::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('Image 2.png') center center / cover no-repeat;
+    filter: blur(3px);
+    opacity: 0.07;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.section-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+.section-header {
+    text-align: center;
+    max-width: 650px;
+    margin: 0 auto 4rem;
+}
+
+.section-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+}
+
+.section-tag::before {
+    content: '';
+    width: 20px;
+    height: 2px;
+    background: var(--accent);
+    border-radius: 2px;
+}
+
+.section-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.15;
+    margin-bottom: 1rem;
+}
+
+.section-desc {
+    font-size: 1.05rem;
+    color: var(--text-mid);
+    line-height: 1.7;
+}
+
+.pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.pillar-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2.25rem;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    color: var(--white);
+    display: block;
+    cursor: pointer;
+}
+
+.pillar-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.pillar-card:hover::before {
+    opacity: 1;
+}
+
+.pillar-card:hover {
+    border-color: var(--border-hover);
+    background: var(--bg-card-hover);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 40px rgba(56, 130, 255, 0.05);
+}
+
+.pillar-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 5rem;
-    opacity: 0.3;
-}
-
-.section-content h2 {
-    font-size: 2.5rem;
-    font-weight: 400;
     margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+    background: rgba(56, 130, 255, 0.1);
+    border: 1px solid rgba(56, 130, 255, 0.15);
     color: var(--accent);
 }
 
-.section-content p {
-    font-size: 1.35rem;
-    line-height: 1.8;
-    color: var(--white);
-    margin-bottom: 1.2rem;
+.pillar-card h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.3px;
 }
 
-.section-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.75rem;
-    letter-spacing: 3px;
-    color: var(--accent);
-    margin-bottom: 1rem;
-    text-transform: uppercase;
-}
-
-.learn-more {
-    display: inline-block;
-    margin-top: 2rem;
-    padding: 0.8rem 2rem;
-    background: transparent;
-    border: 1px solid var(--accent);
-    color: var(--accent);
-    text-decoration: none;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.75rem;
-    letter-spacing: 2px;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-}
-
-.learn-more:hover {
-    background: var(--accent);
-    color: var(--black);
-}
-
-/* Vision Section */
-.vision-section {
-    background: var(--black);
-}
-
-/* Paradigm Section */
-.paradigm-section {
-    background: var(--dark-gray);
-}
-
-/* Philosophy Section */
-.philosophy-section {
-    background: var(--black);
-}
-
-/* Intelligence Section */
-.intelligence-section {
-    background: var(--dark-gray);
-    padding: 4rem 0;
-}
-
-.intel-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.8rem;
-    margin-top: 2.5rem;
-}
-
-.intel-card {
-    background: var(--mid-gray);
-    padding: 1.8rem;
-    border: 1px solid rgba(212, 175, 55, 0.1);
-    transition: all 0.4s ease;
-}
-
-.intel-card:hover {
-    border-color: var(--accent);
-    transform: translateY(-5px);
-}
-
-.intel-icon {
-    font-size: 2.5rem;
+.pillar-card p {
+    font-size: 0.95rem;
+    color: var(--text-mid);
+    line-height: 1.65;
     margin-bottom: 1.5rem;
-    opacity: 0.8;
 }
 
-.intel-card h3 {
-    font-size: 1.5rem;
-    margin-bottom: 0.7rem;
-    font-weight: 500;
+.pillar-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--accent);
+    transition: gap 0.3s ease;
 }
 
-.intel-card p {
-    color: var(--white);
-    line-height: 1.6;
-    font-size: 1.2rem;
+.pillar-card:hover .pillar-link {
+    gap: 0.7rem;
 }
 
-/* Tenant Care Section */
-.tenant-section {
-    background: var(--black);
-    padding: 4rem 0;
+/* ==========================================
+   CTA SECTION
+   ========================================== */
+.cta-section {
+    position: relative;
+    z-index: 10;
+    padding: 7rem 0;
+    background: var(--bg-secondary);
+    overflow: hidden;
 }
 
-.tenant-intro {
+.cta-section::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(56, 130, 255, 0.06) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+.cta-content {
     text-align: center;
-    max-width: 900px;
-    margin: 0 auto 3rem;
-}
-
-.tenant-intro h2 {
-    font-size: 2.8rem;
-    font-weight: 400;
-    margin-bottom: 1.5rem;
-    color: var(--accent);
-}
-
-.tenant-intro p {
-    font-size: 1.45rem;
-    line-height: 1.8;
-    color: var(--white);
-}
-
-.tenant-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2.5rem;
-    margin-top: 3rem;
-}
-
-.tenant-card {
-    background: var(--dark-gray);
-    padding: 2.5rem;
-    border: 1px solid rgba(212, 175, 55, 0.15);
-    transition: all 0.4s ease;
-}
-
-.tenant-card:hover {
-    border-color: var(--accent);
-    transform: translateY(-5px);
-}
-
-.tenant-card h3 {
-    font-size: 1.7rem;
-    margin-bottom: 1rem;
-    font-weight: 500;
-}
-
-.tenant-card p {
-    font-size: 1.35rem;
-    line-height: 1.7;
-    color: var(--white);
-}
-
-/* Contact Section */
-.contact-section {
-    background: var(--dark-gray);
-    padding: 3rem 0;
-}
-
-.contact-content {
-    max-width: 800px;
+    max-width: 600px;
     margin: 0 auto;
-    text-align: center;
+    position: relative;
 }
 
-.contact-content h2 {
-    font-size: 2.5rem;
-    font-weight: 400;
+.cta-content h2 {
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 800;
+    letter-spacing: -1px;
     margin-bottom: 1rem;
-    color: var(--accent);
+    line-height: 1.15;
 }
 
-.contact-content p {
-    font-size: 1.35rem;
-    line-height: 1.8;
-    color: var(--white);
-    margin-bottom: 1.5rem;
+.cta-content p {
+    font-size: 1.05rem;
+    color: var(--text-mid);
+    line-height: 1.7;
+    margin-bottom: 2rem;
 }
 
-.contact-email {
-    display: inline-block;
-    font-size: 1.5rem;
+.cta-email {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.05rem;
     color: var(--accent);
     text-decoration: none;
     padding: 1rem 2rem;
-    border: 2px solid var(--accent);
-    transition: all 0.3s ease;
+    background: rgba(56, 130, 255, 0.08);
+    border: 1px solid rgba(56, 130, 255, 0.2);
+    border-radius: 12px;
     font-family: 'DM Mono', monospace;
-    letter-spacing: 1px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
 }
 
-.contact-email:hover {
+.cta-email:hover {
+    background: rgba(56, 130, 255, 0.15);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(56, 130, 255, 0.15);
+}
+
+/* ==========================================
+   DETAIL PAGE OVERLAY
+   ========================================== */
+.detail-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2000;
+    background: rgba(4, 8, 18, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+.detail-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.detail-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    max-width: 720px;
+    height: 100vh;
+    z-index: 2001;
+    background: var(--bg-secondary);
+    border-left: 1px solid var(--border);
+    transform: translateX(100%);
+    transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.detail-panel.active {
+    transform: translateX(0);
+}
+
+.detail-panel-inner {
+    padding: 3rem 2.5rem;
+}
+
+.detail-close {
+    position: sticky;
+    top: 0;
+    display: flex;
+    justify-content: flex-end;
+    padding: 1.5rem 2.5rem 0;
+    z-index: 10;
+}
+
+.detail-close-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-mid);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 1.2rem;
+}
+
+.detail-close-btn:hover {
+    color: var(--white);
+    border-color: var(--border-hover);
+    background: var(--bg-card-hover);
+}
+
+.detail-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1.25rem;
+}
+
+.detail-tag::before {
+    content: '';
+    width: 16px;
+    height: 2px;
     background: var(--accent);
-    color: var(--black);
+    border-radius: 2px;
 }
 
-/* Footer */
+.detail-panel h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+}
+
+.detail-panel p {
+    font-size: 1.05rem;
+    color: var(--text-mid);
+    line-height: 1.8;
+    margin-bottom: 1.25rem;
+}
+
+.detail-divider {
+    border: none;
+    height: 1px;
+    background: var(--border);
+    margin: 2rem 0;
+}
+
+.detail-card-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.detail-mini-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.detail-mini-card h4 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--white);
+}
+
+.detail-mini-card p {
+    font-size: 0.95rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+
+/* ==========================================
+   FOOTER
+   ========================================== */
 .footer {
-    background: var(--black);
+    background: var(--bg-primary);
+    border-top: 1px solid var(--border);
     padding: 3rem 0 2rem;
-    border-top: 1px solid rgba(212, 175, 55, 0.1);
+    position: relative;
+    z-index: 10;
 }
 
 .footer-container {
-    max-width: 1400px;
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 0 3rem;
+    padding: 0 2rem;
+}
+
+.footer-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.footer-links {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.footer-links a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+    color: var(--white);
+}
+
+.footer-bottom {
+    border-top: 1px solid var(--border);
+    padding-top: 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.footer-links {
-    display: flex;
-    gap: 2rem;
+.footer-bottom p {
+    font-size: 0.8rem;
+    color: var(--text-dim);
 }
 
-.footer-links a {
-    color: var(--text-secondary);
-    text-decoration: none;
-    font-family: 'DM Mono', monospace;
+.footer-bottom .disclaimer {
     font-size: 0.75rem;
-    letter-spacing: 1px;
-    transition: color 0.3s ease;
-}
-
-.footer-links a:hover {
-    color: var(--accent);
-}
-
-.footer-legal {
-    text-align: center;
-    margin-top: 2rem;
-    padding-top: 2rem;
-    border-top: 1px solid rgba(212, 175, 55, 0.1);
-}
-
-.footer-legal p {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--text-secondary);
-    margin-bottom: 0.5rem;
-}
-
-.disclaimer {
-    font-size: 0.65rem !important;
+    color: var(--text-dim);
     opacity: 0.6;
 }
 
-/* Responsive */
+/* ==========================================
+   SCROLL REVEAL
+   ========================================== */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
 @media (max-width: 1024px) {
-    .section-split {
-        grid-template-columns: 1fr;
+    .pillars-grid {
+        grid-template-columns: 1fr 1fr;
     }
-    
-    .intel-grid, .tenant-grid {
-        grid-template-columns: 1fr;
+
+    .stats-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem 1rem;
     }
 }
 
 @media (max-width: 768px) {
-    .nav-container {
-        padding: 0 1.5rem;
-    }
-    
     .nav-links {
-        gap: 1.5rem;
-        font-size: 0.7rem;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(4, 8, 18, 0.98);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+        transform: translateX(100%);
+        transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
     }
-    
-    .section-container {
-        padding: 0 1.5rem;
+
+    .nav-links.active {
+        transform: translateX(0);
     }
-    
+
+    .nav-links a {
+        font-size: 1.25rem;
+        padding: 0.75rem 1.5rem;
+    }
+
+    .nav-toggle {
+        display: flex;
+    }
+
     .hero-title {
+        font-size: clamp(2.5rem, 10vw, 3.5rem);
+        letter-spacing: -1.5px;
+    }
+
+    .pillars-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .hero-actions {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+        max-width: 280px;
+    }
+
+    .detail-panel {
+        max-width: 100%;
+    }
+
+    .detail-panel-inner {
+        padding: 2rem 1.5rem;
+    }
+
+    .footer-top {
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: flex-start;
+    }
+
+    .footer-links {
+        flex-wrap: wrap;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .stat-number {
         font-size: 2rem;
+    }
+
+    .hero-badge {
+        font-size: 0.7rem;
     }
 }
     </style>
 </head>
 <body>
-    <nav class="nav">
+
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
         <div class="nav-container">
-            <div class="logo">
+            <a href="#" class="logo">
                 <img src="zaminyar-logo.png" alt="Zaminyar Holdings" class="logo-image">
+            </a>
+            <div class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
-            <div class="nav-links">
-                <a href="#vision">Our Vision</a>
-                <a href="#paradigm">The Paradigm</a>
-                <a href="#philosophy">Philosophy</a>
-                <a href="#intelligence">Intelligence</a>
-                <a href="#tenants">Tenant Care</a>
-                <a href="#contact">Contact</a>
+            <div class="nav-links" id="navLinks">
+                <a href="#pillars">What We Do</a>
+                <a href="#" data-detail="vision">Our Vision</a>
+                <a href="#" data-detail="paradigm">The Paradigm</a>
+                <a href="#" data-detail="philosophy">Philosophy</a>
+                <a href="#" data-detail="tenants">Tenants</a>
+                <a href="mailto:consultation@zaminyar.co.uk" class="nav-cta">Get in Touch</a>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-bg">
-            <div class="grid-overlay"></div>
+    <section class="hero" id="hero">
+        <div class="hero-ambient"></div>
+        <div class="hero-grid"></div>
+        <div class="hero-glow">
+            <div class="hero-glow-inner" id="heroGlow"></div>
         </div>
+
         <div class="hero-content">
-            <h1 class="hero-title">Autonomous Wealth Creation Through Buy-to-Let Property Investment</h1>
-            <p class="hero-subtitle">A new paradigm of property-backed wealth. The time to build is now.</p>
-        </div>
-    </section>
-
-    <!-- Vision Section -->
-    <section id="vision" class="section vision-section">
-        <div class="section-container">
-            <div class="section-content-full">
-                <div class="section-label">Our Vision</div>
-                <h2>Architecting Self-Sustaining Buy-to-Let Ecosystems</h2>
-                <p>Zaminyar's vision is to engineer a fully optimised, self-sustaining buy-to-let ecosystem where strategic asset acquisition, automated cash flow management, and scalable portfolio growth converge.</p>
-                <p>Through intelligent structuring and data-driven decision-making, Zaminyar transforms buy-to-let investments into autonomous, revenue-generating assets that systematically pay down liabilities, creating a future-proof financial infrastructure for sustained generational wealth.</p>
-                <p>The approach leverages yield compounding, debt amortisation mechanics, and market-responsive asset allocation, minimising owner intervention while maximising long-term capital appreciation.</p>
+            <div class="hero-badge">
+                <span class="hero-badge-dot"></span>
+                Property-Backed Wealth Infrastructure
+            </div>
+            <h1 class="hero-title">
+                Build <span class="gradient-text">Autonomous Wealth</span> Through Buy-to-Let
+            </h1>
+            <p class="hero-subtitle">
+                A new paradigm of property-backed wealth. Engineered for scale. Built for generations. The time to build is now.
+            </p>
+            <div class="hero-actions">
+                <a href="#pillars" class="btn btn-primary">
+                    Explore the Model
+                    <span class="btn-arrow">&rarr;</span>
+                </a>
+                <a href="mailto:consultation@zaminyar.co.uk" class="btn btn-secondary">
+                    Contact Us
+                </a>
             </div>
         </div>
     </section>
 
-    <!-- Paradigm Section -->
-    <section id="paradigm" class="section paradigm-section">
-        <div class="section-container">
-            <div class="section-content-full">
-                <div class="section-label">The Paradigm</div>
-                <h2>A New Era of Financial Evolution</h2>
-                <p>An investment strategy that safeguards capital while amplifying its growth exponentially. Traditional asset classes such as equities and bonds often fall short amid market volatility and unpredictable yields, providing little in the way of tangible security and liquidity.</p>
-                <p>In contrast, BTL investments offer dual revenue streams—steady rental income and property appreciation—further enhanced by strategic mortgage financing and liquidity management.</p>
-                <p>A state-of-the-art mathematical framework underscores the transformative potential of BTL investments, positioning them as a revolutionary alternative in today's dynamic financial landscape.</p>
+    <!-- Stats Bar -->
+    <section class="stats-bar">
+        <div class="stats-container">
+            <div class="stat-item reveal">
+                <div class="stat-number">30yr</div>
+                <div class="stat-label">Investment Horizon</div>
+            </div>
+            <div class="stat-item reveal reveal-delay-1">
+                <div class="stat-number">2x</div>
+                <div class="stat-label">Revenue Streams</div>
+            </div>
+            <div class="stat-item reveal reveal-delay-2">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Data-Driven Decisions</div>
+            </div>
+            <div class="stat-item reveal reveal-delay-3">
+                <div class="stat-number">0</div>
+                <div class="stat-label">Manual Intervention Goal</div>
             </div>
         </div>
     </section>
 
-    <!-- Philosophy Section -->
-    <section id="philosophy" class="section philosophy-section">
+    <!-- Pillars Section -->
+    <section class="pillars" id="pillars">
         <div class="section-container">
-            <div class="section-content-full">
-                <div class="section-label">Philosophy</div>
-                <h2>Scaling Buy-to-Let into an Autonomous Rental Empire</h2>
-                <p>Zaminyar Holdings redefines wealth creation through a new paradigm: scaling buy-to-let property into an autonomous rental empire over a 30-year horizon.</p>
-                <p>Leveraging data intelligence and automation, the model transforms real estate into a self-sustaining financial instrument, outpacing outdated, manual investment models.</p>
-                <p>This isn't traditional property management—it's engineered wealth creation through systematic portfolio optimisation and tenant-supported equity accumulation.</p>
+            <div class="section-header reveal">
+                <div class="section-tag">How It Works</div>
+                <h2 class="section-title">A System Engineered for Autonomous Growth</h2>
+                <p class="section-desc">Strategic acquisition, intelligent automation, and tenant-centric management converge into a self-sustaining wealth engine.</p>
             </div>
-        </div>
-    </section>
 
-    <!-- Intelligence Section -->
-    <section id="intelligence" class="section intelligence-section">
-        <div class="section-container">
-            <div class="tenant-intro">
-                <div class="section-label">Intelligence-Driven Acquisition</div>
-                <h2>Data-Driven Precision in Every Decision</h2>
-                <p>Zaminyar leverages extensive algorithmic analysis across dozens of variables to identify optimal property acquisitions and maximise long-term returns.</p>
-            </div>
-            
-            <div class="intel-grid">
-                <div class="intel-card">
-                    <h3>Geospatial Analytics</h3>
-                    <p>Satellite imagery analysis, proximity modeling, and infrastructure mapping identify micro-markets poised for tenant demand surges and capital appreciation.</p>
+            <div class="pillars-grid">
+                <div class="pillar-card reveal" data-detail="vision">
+                    <div class="pillar-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+                    </div>
+                    <h3>Self-Sustaining Ecosystems</h3>
+                    <p>Fully optimised buy-to-let ecosystems where strategic acquisition, automated cash flow, and scalable growth converge.</p>
+                    <span class="pillar-link">Explore Vision <span class="btn-arrow">&rarr;</span></span>
                 </div>
-                <div class="intel-card">
-                    <h3>Yield Optimisation</h3>
-                    <p>Rent-to-price ratios, vacancy rates, and tenant demographics are analysed through algorithmic filtering to ensure maximum cashflow reliability.</p>
-                </div>
-                <div class="intel-card">
-                    <h3>Risk Calibration</h3>
-                    <p>Economic diversification, correlation analysis, and stress testing ensure portfolio construction designed to weather any market condition.</p>
-                </div>
-                <div class="intel-card">
-                    <h3>Appreciation Forecasting</h3>
-                    <p>Predictive modeling of price trajectories using historical data, policy changes, and macroeconomic indicators guides strategic acquisitions.</p>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Tenant Care Section -->
-    <section id="tenants" class="section tenant-section">
-        <div class="section-container">
-            <div class="tenant-intro">
-                <div class="section-label">The Foundation of Wealth</div>
-                <h2>Tenant Satisfaction Drives Long-Term Success</h2>
-                <p>In autonomous wealth generation, tenant relationships form the cornerstone of sustainable portfolio growth. When freed from chasing immediate cashflow, the focus shifts to creating lasting value through exceptional property stewardship.</p>
-            </div>
-            
-            <div class="tenant-grid">
-                <div class="tenant-card">
-                    <h3>Premium Maintenance Standards</h3>
-                    <p>Properties are maintained to the highest standards because tenant satisfaction drives long-term occupancy. Proactive repairs and quality maintenance prevent costly void periods and tenant turnover.</p>
+                <div class="pillar-card reveal reveal-delay-1" data-detail="paradigm">
+                    <div class="pillar-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    </div>
+                    <h3>Dual Growth Path</h3>
+                    <p>BTL investments deliver steady rental income and property appreciation, enhanced by strategic mortgage financing.</p>
+                    <span class="pillar-link">Explore Paradigm <span class="btn-arrow">&rarr;</span></span>
                 </div>
-                <div class="tenant-card">
-                    <h3>Continuous Property Upgrades</h3>
-                    <p>Modern kitchens, efficient heating systems, and quality appliances aren't luxuries—they're investments in tenant retention that drive multi-year tenancies and portfolio stability.</p>
+
+                <div class="pillar-card reveal reveal-delay-2" data-detail="philosophy">
+                    <div class="pillar-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                    </div>
+                    <h3>Systematic Scaling</h3>
+                    <p>Data intelligence and automation transform real estate into a self-sustaining financial instrument at scale.</p>
+                    <span class="pillar-link">Explore Philosophy <span class="btn-arrow">&rarr;</span></span>
                 </div>
-                <div class="tenant-card">
-                    <h3>Responsive Communication</h3>
-                    <p>Rapid response to issues, transparent communication, and professional property management create the stability that makes 30-year wealth accumulation sustainable.</p>
+
+                <div class="pillar-card reveal reveal-delay-1" data-detail="intelligence">
+                    <div class="pillar-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                    </div>
+                    <h3>Intelligence-Driven Acquisition</h3>
+                    <p>Extensive algorithmic analysis across dozens of variables identifies optimal acquisitions and maximises returns.</p>
+                    <span class="pillar-link">Explore Intelligence <span class="btn-arrow">&rarr;</span></span>
                 </div>
-                <div class="tenant-card">
-                    <h3>Fair, Sustainable Pricing</h3>
-                    <p>Rent is set at market-appropriate rates that balance property performance with tenant retention. Stability and low vacancy rates generate superior long-term returns compared to aggressive short-term extraction.</p>
+
+                <div class="pillar-card reveal reveal-delay-2" data-detail="tenants">
+                    <div class="pillar-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <h3>Tenant-Centric Growth</h3>
+                    <p>Tenant satisfaction drives long-term occupancy and portfolio stability, forming the cornerstone of sustainable wealth.</p>
+                    <span class="pillar-link">Explore Tenant Care <span class="btn-arrow">&rarr;</span></span>
+                </div>
+
+                <div class="pillar-card reveal reveal-delay-3" data-detail="contact">
+                    <div class="pillar-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    </div>
+                    <h3>Start a Conversation</h3>
+                    <p>Discuss how Zaminyar's autonomous wealth architecture can be applied to your property portfolio.</p>
+                    <span class="pillar-link">Get in Touch <span class="btn-arrow">&rarr;</span></span>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="section contact-section">
+    <!-- CTA Section -->
+    <section class="cta-section" id="contact">
         <div class="section-container">
-            <div class="contact-content">
-                <div class="section-label">Contact Us</div>
-                <h2>Get in Touch</h2>
+            <div class="cta-content reveal">
+                <div class="section-tag">Get Started</div>
+                <h2>Ready to Build Generational Wealth?</h2>
                 <p>To discuss how Zaminyar's autonomous wealth architecture can be applied to your property portfolio:</p>
-                <a href="mailto:consultation@zaminyar.co.uk" class="contact-email">consultation@zaminyar.co.uk</a>
+                <a href="mailto:consultation@zaminyar.co.uk" class="cta-email">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    consultation@zaminyar.co.uk
+                </a>
             </div>
         </div>
     </section>
@@ -677,35 +1156,240 @@ body {
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-container">
-            <div class="logo">
-                <img src="zaminyar-logo.png" alt="Zaminyar Holdings" class="logo-image">
+            <div class="footer-top">
+                <a href="#" class="logo">
+                    <img src="zaminyar-logo.png" alt="Zaminyar Holdings" class="logo-image">
+                </a>
+                <div class="footer-links">
+                    <a href="#" data-detail="vision">Our Vision</a>
+                    <a href="#" data-detail="paradigm">The Paradigm</a>
+                    <a href="#" data-detail="philosophy">Philosophy</a>
+                    <a href="#" data-detail="intelligence">Intelligence</a>
+                    <a href="#" data-detail="tenants">Tenant Care</a>
+                    <a href="#contact">Contact</a>
+                </div>
             </div>
-            <div class="footer-links">
-                <a href="#vision">Our Vision</a>
-                <a href="#paradigm">The Paradigm</a>
-                <a href="#philosophy">Philosophy</a>
-                <a href="#intelligence">Intelligence</a>
-                <a href="#tenants">Tenant Care</a>
-                <a href="#contact">Contact</a>
-            </div>
-        </div>
-        <div class="section-container">
-            <div class="footer-legal">
-                <p>Copyright © 2025 Zaminyar Holdings Limited - All Rights Reserved.</p>
+            <div class="footer-bottom">
+                <p>Copyright &copy; 2025 Zaminyar Holdings Limited &mdash; All Rights Reserved.</p>
                 <p class="disclaimer">The content presented is for informational purposes only and does not constitute financial advice.</p>
             </div>
         </div>
     </footer>
 
+    <!-- Detail Overlay -->
+    <div class="detail-overlay" id="detailOverlay"></div>
+
+    <!-- Detail Panels -->
+    <div class="detail-panel" id="detailPanel">
+        <div class="detail-close">
+            <button class="detail-close-btn" id="detailClose">&times;</button>
+        </div>
+
+        <!-- Vision -->
+        <div class="detail-panel-inner detail-page" id="detail-vision" style="display:none;">
+            <div class="detail-tag">Our Vision</div>
+            <h2>Architecting Self-Sustaining Buy-to-Let Ecosystems</h2>
+            <p>Zaminyar's vision is to engineer a fully optimised, self-sustaining buy-to-let ecosystem where strategic asset acquisition, automated cash flow management, and scalable portfolio growth converge.</p>
+            <p>Through intelligent structuring and data-driven decision-making, Zaminyar transforms buy-to-let investments into autonomous, revenue-generating assets that systematically pay down liabilities, creating a future-proof financial infrastructure for sustained generational wealth.</p>
+            <p>The approach leverages yield compounding, debt amortisation mechanics, and market-responsive asset allocation, minimising owner intervention while maximising long-term capital appreciation.</p>
+        </div>
+
+        <!-- Paradigm -->
+        <div class="detail-panel-inner detail-page" id="detail-paradigm" style="display:none;">
+            <div class="detail-tag">The Paradigm</div>
+            <h2>A New Era of Financial Evolution</h2>
+            <p>An investment strategy that safeguards capital while amplifying its growth exponentially. Traditional asset classes such as equities and bonds often fall short amid market volatility and unpredictable yields, providing little in the way of tangible security and liquidity.</p>
+            <p>In contrast, BTL investments offer dual revenue streams—steady rental income and property appreciation—further enhanced by strategic mortgage financing and liquidity management.</p>
+            <p>A state-of-the-art mathematical framework underscores the transformative potential of BTL investments, positioning them as a revolutionary alternative in today's dynamic financial landscape.</p>
+        </div>
+
+        <!-- Philosophy -->
+        <div class="detail-panel-inner detail-page" id="detail-philosophy" style="display:none;">
+            <div class="detail-tag">Philosophy</div>
+            <h2>Scaling Buy-to-Let into an Autonomous Wealth System</h2>
+            <p>Zaminyar Holdings redefines wealth creation through a new paradigm: scaling buy-to-let property into an autonomous wealth system over a 30-year horizon.</p>
+            <p>Leveraging data intelligence and automation, the model transforms real estate into a self-sustaining financial instrument, outpacing outdated, manual investment models.</p>
+            <p>This isn't traditional property management—it's engineered wealth creation through systematic portfolio optimisation and tenant-supported equity accumulation.</p>
+        </div>
+
+        <!-- Intelligence -->
+        <div class="detail-panel-inner detail-page" id="detail-intelligence" style="display:none;">
+            <div class="detail-tag">Intelligence-Driven Acquisition</div>
+            <h2>Data-Driven Precision in Every Decision</h2>
+            <p>Zaminyar leverages extensive algorithmic analysis across dozens of variables to identify optimal property acquisitions and maximise long-term returns.</p>
+            <hr class="detail-divider">
+            <div class="detail-card-grid">
+                <div class="detail-mini-card">
+                    <h4>Geospatial Analytics</h4>
+                    <p>Satellite imagery analysis, proximity modeling, and infrastructure mapping identify micro-markets poised for tenant demand surges and capital appreciation.</p>
+                </div>
+                <div class="detail-mini-card">
+                    <h4>Yield Optimisation</h4>
+                    <p>Rent-to-price ratios, vacancy rates, and tenant demographics are analysed through algorithmic filtering to ensure maximum cashflow reliability.</p>
+                </div>
+                <div class="detail-mini-card">
+                    <h4>Risk Calibration</h4>
+                    <p>Economic diversification, correlation analysis, and stress testing ensure portfolio construction designed to weather any market condition.</p>
+                </div>
+                <div class="detail-mini-card">
+                    <h4>Appreciation Forecasting</h4>
+                    <p>Predictive modeling of price trajectories using historical data, policy changes, and macroeconomic indicators guides strategic acquisitions.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tenants -->
+        <div class="detail-panel-inner detail-page" id="detail-tenants" style="display:none;">
+            <div class="detail-tag">The Foundation of Wealth</div>
+            <h2>Tenant Satisfaction Drives Long-Term Success</h2>
+            <p>In autonomous wealth generation, tenant relationships form the cornerstone of sustainable portfolio growth. When freed from chasing immediate cashflow, the focus shifts to creating lasting value through exceptional property stewardship.</p>
+            <hr class="detail-divider">
+            <div class="detail-card-grid">
+                <div class="detail-mini-card">
+                    <h4>Premium Maintenance Standards</h4>
+                    <p>Properties are maintained to the highest standards because tenant satisfaction drives long-term occupancy. Proactive repairs and quality maintenance prevent costly void periods and tenant turnover.</p>
+                </div>
+                <div class="detail-mini-card">
+                    <h4>Continuous Property Upgrades</h4>
+                    <p>Modern kitchens, efficient heating systems, and quality appliances aren't luxuries—they're investments in tenant retention that drive multi-year tenancies and portfolio stability.</p>
+                </div>
+                <div class="detail-mini-card">
+                    <h4>Responsive Communication</h4>
+                    <p>Rapid response to issues, transparent communication, and professional property management create the stability that makes 30-year wealth accumulation sustainable.</p>
+                </div>
+                <div class="detail-mini-card">
+                    <h4>Fair, Sustainable Pricing</h4>
+                    <p>Rent is set at market-appropriate rates that balance property performance with tenant retention. Stability and low vacancy rates generate superior long-term returns compared to aggressive short-term extraction.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact -->
+        <div class="detail-panel-inner detail-page" id="detail-contact" style="display:none;">
+            <div class="detail-tag">Contact Us</div>
+            <h2>Get in Touch</h2>
+            <p>To discuss how Zaminyar's autonomous wealth architecture can be applied to your property portfolio:</p>
+            <a href="mailto:consultation@zaminyar.co.uk" class="cta-email" style="margin-top: 1rem;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                consultation@zaminyar.co.uk
+            </a>
+        </div>
+    </div>
+
     <script>
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+/* ==========================================
+   MOUSE-TRACKING HERO GLOW
+   ========================================== */
+const heroGlow = document.getElementById('heroGlow');
+const hero = document.querySelector('.hero');
+
+hero.addEventListener('mousemove', (e) => {
+    const rect = hero.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    heroGlow.style.left = x + 'px';
+    heroGlow.style.top = y + 'px';
+});
+
+/* ==========================================
+   NAV SCROLL EFFECT
+   ========================================== */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 50);
+});
+
+/* ==========================================
+   MOBILE NAV
+   ========================================== */
+const navToggle = document.getElementById('navToggle');
+const navLinks = document.getElementById('navLinks');
+
+navToggle.addEventListener('click', () => {
+    navToggle.classList.toggle('active');
+    navLinks.classList.toggle('active');
+});
+
+/* ==========================================
+   SCROLL REVEAL
+   ========================================== */
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
         }
     });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+/* ==========================================
+   SMOOTH SCROLL
+   ========================================== */
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href === '#') return;
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            navLinks.classList.remove('active');
+            navToggle.classList.remove('active');
+        }
+    });
+});
+
+/* ==========================================
+   DETAIL PANEL SYSTEM
+   ========================================== */
+const detailOverlay = document.getElementById('detailOverlay');
+const detailPanel = document.getElementById('detailPanel');
+const detailClose = document.getElementById('detailClose');
+const detailPages = document.querySelectorAll('.detail-page');
+
+function openDetail(id) {
+    detailPages.forEach(p => p.style.display = 'none');
+    const target = document.getElementById('detail-' + id);
+    if (target) {
+        target.style.display = 'block';
+        detailOverlay.classList.add('active');
+        detailPanel.classList.add('active');
+        detailPanel.scrollTop = 0;
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeDetail() {
+    detailOverlay.classList.remove('active');
+    detailPanel.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Click handlers for detail triggers
+document.querySelectorAll('[data-detail]').forEach(el => {
+    el.addEventListener('click', (e) => {
+        e.preventDefault();
+        const id = el.getAttribute('data-detail');
+        if (id === 'contact') {
+            // For contact, just scroll to CTA section instead of opening panel
+            document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+            navLinks.classList.remove('active');
+            navToggle.classList.remove('active');
+            return;
+        }
+        openDetail(id);
+        navLinks.classList.remove('active');
+        navToggle.classList.remove('active');
+    });
+});
+
+detailClose.addEventListener('click', closeDetail);
+detailOverlay.addEventListener('click', closeDetail);
+
+// ESC key closes panel
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeDetail();
 });
     </script>
 </body>
