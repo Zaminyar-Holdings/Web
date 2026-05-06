@@ -3,183 +3,297 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f4ede0">
+    <meta name="description" content="A new paradigm of property-backed wealth. Engineered for scale. Built for generations.">
     <title>Zaminyar Holdings | Autonomous Wealth Creation</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,200..600,0..100&family=Inter:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
 /* ==========================================
-   CSS VARIABLES
+   DESIGN TOKENS
    ========================================== */
 :root {
-    --bg-primary: #040812;
-    --bg-secondary: #0a1020;
-    --bg-card: #0d1528;
-    --bg-card-hover: #111d38;
-    --border: rgba(56, 130, 255, 0.08);
-    --border-hover: rgba(56, 130, 255, 0.2);
-    --white: #f0f4ff;
-    --text-dim: #6b7a99;
-    --text-mid: #8fa4c8;
-    --accent: #3882ff;
-    --accent-bright: #60a0ff;
-    --accent-glow: rgba(56, 130, 255, 0.15);
-    --accent-gold: #d4af37;
-    --gradient-start: #3882ff;
-    --gradient-end: #a855f7;
+    --paper:        #f4ede0;
+    --paper-soft:   #ede4d2;
+    --paper-deep:   #e3d8c0;
+    --ink:          #181410;
+    --ink-strong:   #0d0a07;
+    --ink-mid:      #4a3f33;
+    --ink-soft:     #7a6b58;
+    --rule:         #c9bea4;
+    --rule-soft:    #d8cdb1;
+    --accent:       #1a2a44;
+    --accent-bright:#2a4570;
+    --gold:         #9c7c2e;
+    --gold-bright:  #c8a14c;
+    --highlight:    #e8d9a8;
+
+    --serif: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --sans:  'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono:  'DM Mono', ui-monospace, monospace;
+
+    --ease:    cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-io: cubic-bezier(0.65, 0, 0.35, 1);
+
+    --container: 1240px;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 html {
-    scroll-behavior: smooth;
     font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    color-scheme: light;
 }
 
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: var(--bg-primary);
-    color: var(--white);
+    font-family: var(--sans);
+    background: var(--paper);
+    color: var(--ink);
     line-height: 1.6;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "ss01", "kern", "liga";
+    text-rendering: optimizeLegibility;
 }
 
-/* Full-page background image */
+/* paper grain */
 body::before {
     content: '';
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('Image.png') center center / cover no-repeat;
-    filter: blur(3px);
-    opacity: 0.08;
-    z-index: 0;
+    inset: 0;
+    z-index: 1;
     pointer-events: none;
+    opacity: 0.5;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.4 0 0 0 0 0.3 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+::selection {
+    background: var(--ink-strong);
+    color: var(--paper);
+}
+
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+
+/* ==========================================
+   IMAGE TREATMENT — unifies all photography
+   to the cream/ink editorial palette
+   ========================================== */
+.img-treated {
+    position: relative;
+    overflow: hidden;
+    background: var(--paper-deep);
+}
+
+.img-treated img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: saturate(0.55) contrast(1.05) brightness(0.97);
+    transition: filter 0.7s var(--ease), transform 1s var(--ease);
+}
+
+.img-treated::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(180deg, rgba(155, 124, 46, 0.05), rgba(24, 20, 16, 0.06)),
+        rgba(244, 237, 224, 0.08);
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    z-index: 1;
 }
 
 /* ==========================================
-   NAVIGATION
+   LOADER
+   ========================================== */
+.loader {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.7s var(--ease) 0.2s, visibility 0.7s var(--ease) 0.2s;
+}
+
+.loader.done { opacity: 0; visibility: hidden; }
+
+.loader .logo {
+    opacity: 0;
+    animation: loaderIn 0.9s var(--ease) 0.1s forwards;
+}
+
+@keyframes loaderIn {
+    0%   { opacity: 0; transform: translateY(8px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================
+   SCROLL PROGRESS
+   ========================================== */
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 1px;
+    width: 0%;
+    background: var(--ink-strong);
+    z-index: 1100;
+    pointer-events: none;
+    transition: width 0.1s linear;
+}
+
+/* ==========================================
+   NAV
    ========================================== */
 .nav {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    z-index: 1000;
-    transition: all 0.4s ease;
+    z-index: 100;
+    transition: background 0.5s var(--ease), border-color 0.5s var(--ease);
+    border-bottom: 1px solid transparent;
 }
 
 .nav.scrolled {
-    background: rgba(4, 8, 18, 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
+    background: rgba(244, 237, 224, 0.85);
+    backdrop-filter: blur(12px) saturate(110%);
+    -webkit-backdrop-filter: blur(12px) saturate(110%);
+    border-bottom-color: var(--rule-soft);
 }
 
 .nav-container {
-    max-width: 1280px;
+    max-width: var(--container);
     margin: 0 auto;
-    padding: 1.25rem 2rem;
+    padding: 1.5rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 .logo {
-    display: flex;
+    display: inline-flex;
+    flex-direction: column;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.3rem;
     text-decoration: none;
-    color: var(--white);
+    color: var(--ink-strong);
+    line-height: 1;
+    transition: opacity 0.3s var(--ease);
 }
 
-.logo-image {
-    height: 40px;
-    width: auto;
+.logo:hover { opacity: 0.65; }
+
+.logo-name {
+    font-family: var(--serif);
+    font-variation-settings: "opsz" 24, "SOFT" 80;
+    font-weight: 400;
+    font-size: 1.2rem;
+    letter-spacing: -0.005em;
+}
+
+.logo-rule {
     display: block;
+    width: 100%;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.5;
 }
 
-.logo-text {
-    font-weight: 700;
-    font-size: 1.1rem;
-    letter-spacing: -0.3px;
+.logo-holdings {
+    font-family: var(--mono);
+    font-size: 0.52rem;
+    font-weight: 500;
+    letter-spacing: 0.42em;
+    padding-left: 0.42em;
+    text-transform: uppercase;
+    opacity: 0.8;
 }
 
-.nav-links {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-}
+.logo--lg { gap: 0.55rem; }
+.logo--lg .logo-name { font-size: 2.1rem; font-variation-settings: "opsz" 60, "SOFT" 80; }
+.logo--lg .logo-holdings { font-size: 0.7rem; letter-spacing: 0.45em; padding-left: 0.45em; }
+
+.nav-links { display: flex; gap: 0.25rem; align-items: center; }
 
 .nav-links a {
-    color: var(--text-mid);
-    text-decoration: none;
-    font-size: 0.875rem;
+    color: var(--ink-mid);
+    font-family: var(--sans);
+    font-size: 0.85rem;
     font-weight: 500;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    transition: all 0.2s ease;
+    padding: 0.5rem 0.9rem;
+    transition: color 0.25s var(--ease);
+    position: relative;
 }
 
-.nav-links a:hover {
-    color: var(--white);
-    background: rgba(255, 255, 255, 0.05);
+.nav-links a:not(.nav-cta)::after {
+    content: '';
+    position: absolute;
+    left: 0.9rem;
+    right: 0.9rem;
+    bottom: 0.3rem;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.4s var(--ease);
 }
+
+.nav-links a:not(.nav-cta):hover { color: var(--ink-strong); }
+.nav-links a:not(.nav-cta):hover::after { transform: scaleX(1); }
+.nav-links a.active-section { color: var(--ink-strong); }
+.nav-links a.active-section::after { transform: scaleX(1); }
 
 .nav-cta {
-    background: var(--accent) !important;
-    color: var(--white) !important;
-    padding: 0.5rem 1.25rem !important;
-    border-radius: 8px !important;
-    font-weight: 600 !important;
-    transition: all 0.3s ease !important;
+    color: var(--paper) !important;
+    background: var(--ink-strong);
+    padding: 0.6rem 1.1rem !important;
+    margin-left: 0.5rem;
+    font-size: 0.8rem !important;
+    letter-spacing: 0.5px;
+    transition: background 0.3s var(--ease), transform 0.3s var(--ease) !important;
 }
 
 .nav-cta:hover {
-    background: var(--accent-bright) !important;
+    background: var(--accent);
     transform: translateY(-1px);
-    box-shadow: 0 4px 20px rgba(56, 130, 255, 0.3);
 }
 
-/* Mobile Nav */
 .nav-toggle {
     display: none;
-    width: 28px;
-    height: 20px;
+    width: 26px;
+    height: 18px;
     flex-direction: column;
     justify-content: space-between;
     cursor: pointer;
-    z-index: 1001;
+    z-index: 101;
+    background: none;
+    border: none;
+    padding: 0;
 }
 
 .nav-toggle span {
     width: 100%;
-    height: 2px;
-    background: var(--white);
-    border-radius: 2px;
-    transition: all 0.3s ease;
+    height: 1.5px;
+    background: var(--ink-strong);
+    transition: all 0.3s var(--ease);
 }
 
-.nav-toggle.active span:nth-child(1) {
-    transform: rotate(45deg) translate(6px, 6px);
-}
-.nav-toggle.active span:nth-child(2) {
-    opacity: 0;
-}
-.nav-toggle.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(6px, -6px);
-}
+.nav-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+.nav-toggle.active span:nth-child(2) { opacity: 0; }
+.nav-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
 
 /* ==========================================
-   HERO SECTION
+   HERO — with cityscape horizon
    ========================================== */
 .hero {
     position: relative;
@@ -187,507 +301,929 @@ body::before {
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 8rem 2rem 4rem;
     overflow: hidden;
-    padding-top: 5rem;
-}
-
-/* Mouse-tracking gradient */
-.hero-glow {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    pointer-events: none;
-    z-index: 1;
-}
-
-.hero-glow-inner {
-    position: absolute;
-    width: 800px;
-    height: 800px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(56, 130, 255, 0.12) 0%, rgba(168, 85, 247, 0.06) 40%, transparent 70%);
-    transform: translate(-50%, -50%);
-    transition: left 0.3s ease-out, top 0.3s ease-out;
-    filter: blur(40px);
-    left: 50%;
-    top: 50%;
-}
-
-/* Static ambient gradients */
-.hero-ambient {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    pointer-events: none;
-    z-index: 0;
-}
-
-.hero-ambient::before {
-    content: '';
-    position: absolute;
-    top: -20%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 140%;
-    height: 60%;
-    background: radial-gradient(ellipse, rgba(56, 130, 255, 0.06) 0%, transparent 60%);
-}
-
-.hero-ambient::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 200px;
-    background: linear-gradient(to top, var(--bg-primary), transparent);
     z-index: 2;
 }
 
-/* Grid pattern */
-.hero-grid {
+.hero-horizon {
     position: absolute;
-    top: 0;
+    bottom: 0;
     left: 0;
     right: 0;
-    bottom: 0;
-    background-image:
-        linear-gradient(rgba(56, 130, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(56, 130, 255, 0.03) 1px, transparent 1px);
-    background-size: 80px 80px;
-    z-index: 1;
-    mask-image: radial-gradient(ellipse 60% 50% at 50% 40%, black 20%, transparent 70%);
-    -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 40%, black 20%, transparent 70%);
+    height: 55%;
+    background: url('Image.png') center bottom / cover no-repeat;
+    filter: grayscale(0.85) sepia(0.55) saturate(0.7) brightness(1.05) contrast(0.95);
+    opacity: 0.5;
+    -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 5%, rgba(0,0,0,0.65) 50%, transparent 95%);
+            mask-image: linear-gradient(to top, rgba(0,0,0,1) 5%, rgba(0,0,0,0.65) 50%, transparent 95%);
+    z-index: 0;
+    pointer-events: none;
+    animation: horizonRise 1.6s var(--ease) 0.4s both;
+}
+
+@keyframes horizonRise {
+    from { opacity: 0; transform: translateY(40px); }
+    to   { opacity: 0.5; transform: translateY(0); }
+}
+
+.hero-horizon::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(244, 237, 224, 0.5) 0%, rgba(244, 237, 224, 0) 30%);
 }
 
 .hero-content {
-    position: relative;
-    z-index: 10;
-    max-width: 900px;
-    padding: 0 2rem;
+    max-width: 1100px;
+    width: 100%;
     text-align: center;
+    position: relative;
+    z-index: 2;
 }
 
-.hero-badge {
+.hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-weight: 400;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeIn 1s var(--ease) 0.5s forwards;
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.4rem 1rem;
-    background: rgba(56, 130, 255, 0.08);
-    border: 1px solid rgba(56, 130, 255, 0.15);
-    border-radius: 100px;
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: var(--accent-bright);
-    margin-bottom: 2rem;
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeUp 0.6s ease 0.3s forwards;
+    gap: 1rem;
 }
 
-.hero-badge-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
-    animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
+.hero-eyebrow::before,
+.hero-eyebrow::after {
+    content: '';
+    width: 28px;
+    height: 1px;
+    background: var(--rule);
 }
 
 .hero-title {
-    font-size: clamp(3rem, 7vw, 5.5rem);
-    font-weight: 800;
-    line-height: 1.05;
-    letter-spacing: -2.5px;
-    margin-bottom: 1.5rem;
-    opacity: 0;
-    transform: translateY(30px);
-    animation: fadeUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.5s forwards;
+    font-family: var(--serif);
+    font-variation-settings: "opsz" 144, "SOFT" 100;
+    font-weight: 300;
+    font-size: clamp(2.75rem, 8.2vw, 7.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    color: var(--ink-strong);
+    margin-bottom: 2.5rem;
 }
 
-.hero-title .gradient-text {
-    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+.hero-title .word {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: baseline;
+    padding: 0.05em 0.02em;
+    margin: 0 -0.02em;
 }
+
+.hero-title .word > span {
+    display: inline-block;
+    transform: translateY(105%);
+    opacity: 0;
+    animation: wordRise 1.1s var(--ease) forwards;
+}
+
+.hero-title em {
+    font-style: italic;
+    font-weight: 300;
+    font-variation-settings: "opsz" 144, "SOFT" 100;
+    color: var(--accent);
+}
+
+@keyframes wordRise {
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.hero-rule {
+    width: 0;
+    height: 1px;
+    background: var(--ink-strong);
+    margin: 0 auto 2.5rem;
+    animation: ruleGrow 1.2s var(--ease) 1.6s forwards;
+}
+
+@keyframes ruleGrow { to { width: 80px; } }
 
 .hero-subtitle {
-    font-size: clamp(1.1rem, 2vw, 1.35rem);
-    color: var(--text-mid);
-    max-width: 600px;
-    margin: 0 auto 2.5rem;
-    line-height: 1.7;
+    font-family: var(--sans);
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    color: var(--ink-mid);
+    max-width: 580px;
+    margin: 0 auto 3.5rem;
+    line-height: 1.75;
     font-weight: 400;
     opacity: 0;
-    transform: translateY(20px);
-    animation: fadeUp 0.8s ease 0.8s forwards;
+    animation: fadeIn 1s var(--ease) 1.8s forwards;
 }
 
 .hero-actions {
     display: flex;
-    gap: 1rem;
+    gap: 2.5rem;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
     opacity: 0;
-    transform: translateY(20px);
-    animation: fadeUp 0.8s ease 1s forwards;
+    animation: fadeIn 1s var(--ease) 2s forwards;
 }
 
-.btn {
+@keyframes fadeIn { to { opacity: 1; } }
+
+.link-btn {
+    font-family: var(--sans);
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--ink-strong);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.85rem 1.75rem;
-    border-radius: 10px;
-    font-size: 0.95rem;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    gap: 0.65rem;
+    padding: 0.4rem 0;
+    position: relative;
+    transition: color 0.3s var(--ease);
     cursor: pointer;
+    background: none;
     border: none;
-    font-family: inherit;
 }
 
-.btn-primary {
-    background: var(--accent);
-    color: white;
+.link-btn::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--ink-strong);
+    transform-origin: left center;
+    transition: transform 0.5s var(--ease), background 0.3s var(--ease);
 }
 
-.btn-primary:hover {
-    background: var(--accent-bright);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(56, 130, 255, 0.3);
+.link-btn .arrow {
+    display: inline-block;
+    transition: transform 0.5s var(--ease);
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    line-height: 0;
+    margin-bottom: 1px;
 }
 
-.btn-secondary {
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--white);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+.link-btn:hover .arrow { transform: translateX(8px); }
+
+.link-btn-quiet { color: var(--ink-mid); }
+.link-btn-quiet::after {
+    background: var(--ink-mid);
+    transform: scaleX(0);
+}
+.link-btn-quiet:hover { color: var(--ink-strong); }
+.link-btn-quiet:hover::after {
+    transform: scaleX(1);
+    background: var(--ink-strong);
 }
 
-.btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
+.hero-scroll-cue {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    opacity: 0;
+    animation: fadeIn 1s var(--ease) 2.4s forwards;
+    pointer-events: none;
+    z-index: 3;
 }
 
-.btn-arrow {
-    transition: transform 0.3s ease;
+.hero-scroll-cue span {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--ink-soft);
+    letter-spacing: 3px;
+    text-transform: uppercase;
 }
 
-.btn:hover .btn-arrow {
-    transform: translateX(3px);
+.hero-scroll-line {
+    width: 1px;
+    height: 32px;
+    background: var(--ink-soft);
+    overflow: hidden;
+    position: relative;
 }
 
-@keyframes fadeUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.hero-scroll-line::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--paper);
+    animation: scrollDown 2.2s var(--ease-io) infinite;
+}
+
+@keyframes scrollDown {
+    0%   { transform: translateY(-100%); }
+    50%  { transform: translateY(0); }
+    100% { transform: translateY(100%); }
 }
 
 /* ==========================================
-   STATS BAR
+   MANIFESTO — with sepia plate
    ========================================== */
-.stats-bar {
-    position: relative;
-    z-index: 10;
-    padding: 4rem 0;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    background: rgba(10, 16, 32, 0.5);
-}
-
-.stats-container {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0 2rem;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2rem;
-}
-
-.stat-item {
+.manifesto {
+    padding: 8rem 2rem 6rem;
     text-align: center;
-}
-
-.stat-number {
-    font-size: 2.5rem;
-    font-weight: 800;
-    letter-spacing: -1px;
-    background: linear-gradient(135deg, var(--white), var(--text-mid));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 0.25rem;
-}
-
-.stat-label {
-    font-size: 0.85rem;
-    color: var(--text-dim);
-    font-weight: 500;
-}
-
-/* ==========================================
-   PILLARS SECTION (front face summary)
-   ========================================== */
-.pillars {
     position: relative;
-    z-index: 10;
-    padding: 7rem 0;
-    background: var(--bg-primary);
+    z-index: 2;
     overflow: hidden;
 }
 
-.pillars::before {
+.manifesto::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('Image 2.png') center center / cover no-repeat;
-    filter: blur(3px);
-    opacity: 0.07;
+    inset: 0;
+    background: url('Image 2.png') center / cover no-repeat;
+    filter: grayscale(0.95) sepia(0.55) saturate(0.7) brightness(1.08) contrast(0.95);
+    opacity: 0.18;
+    -webkit-mask-image: radial-gradient(ellipse 60% 70% at 50% 50%, black 30%, transparent 90%);
+            mask-image: radial-gradient(ellipse 60% 70% at 50% 50%, black 30%, transparent 90%);
     z-index: 0;
-    pointer-events: none;
 }
 
-.section-container {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0 2rem;
+.manifesto-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 1.5rem;
     position: relative;
     z-index: 1;
 }
 
-.section-header {
-    text-align: center;
-    max-width: 650px;
-    margin: 0 auto 4rem;
-}
-
-.section-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-bottom: 1rem;
-}
-
-.section-tag::before {
-    content: '';
-    width: 20px;
-    height: 2px;
-    background: var(--accent);
-    border-radius: 2px;
-}
-
-.section-title {
-    font-size: clamp(2rem, 4vw, 3rem);
-    font-weight: 800;
-    letter-spacing: -1px;
-    line-height: 1.15;
-    margin-bottom: 1rem;
-}
-
-.section-desc {
-    font-size: 1.05rem;
-    color: var(--text-mid);
-    line-height: 1.7;
-}
-
-.pillars-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-}
-
-.pillar-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 2.25rem;
-    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+.manifesto-text {
+    font-family: var(--serif);
+    font-variation-settings: "opsz" 80, "SOFT" 80;
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(1.25rem, 2.4vw, 1.85rem);
+    line-height: 1.5;
+    color: var(--ink-mid);
+    max-width: 760px;
+    margin: 0 auto;
+    letter-spacing: -0.005em;
     position: relative;
-    overflow: hidden;
-    text-decoration: none;
-    color: var(--white);
-    display: block;
-    cursor: pointer;
+    z-index: 1;
 }
 
-.pillar-card::before {
-    content: '';
-    position: absolute;
+/* ==========================================
+   METRICS — pinned narrative
+   ========================================== */
+.metrics {
+    position: relative;
+    z-index: 2;
+    background: var(--paper-soft);
+    border-top: 1px solid var(--rule-soft);
+    border-bottom: 1px solid var(--rule-soft);
+}
+
+.metrics-track { height: 500vh; position: relative; }
+
+.metrics-pin {
+    position: sticky;
     top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
-    opacity: 0;
-    transition: opacity 0.4s ease;
-}
-
-.pillar-card:hover::before {
-    opacity: 1;
-}
-
-.pillar-card:hover {
-    border-color: var(--border-hover);
-    background: var(--bg-card-hover);
-    transform: translateY(-4px);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 40px rgba(56, 130, 255, 0.05);
-}
-
-.pillar-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
+    height: 100vh;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 1.5rem;
-    font-size: 1.3rem;
-    background: rgba(56, 130, 255, 0.1);
-    border: 1px solid rgba(56, 130, 255, 0.15);
-    color: var(--accent);
 }
 
-.pillar-card h3 {
-    font-size: 1.25rem;
-    font-weight: 700;
-    margin-bottom: 0.75rem;
-    letter-spacing: -0.3px;
+.metrics-bgs {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
 }
 
-.pillar-card p {
-    font-size: 0.95rem;
-    color: var(--text-mid);
-    line-height: 1.65;
-    margin-bottom: 1.5rem;
+.metrics-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    filter: grayscale(0.85) sepia(0.55) saturate(0.7) brightness(1.05) contrast(0.95);
+    opacity: 0;
+    transition: opacity 0.9s var(--ease);
+    -webkit-mask-image: radial-gradient(ellipse 90% 100% at 50% 50%, black 20%, transparent 95%);
+            mask-image: radial-gradient(ellipse 90% 100% at 50% 50%, black 20%, transparent 95%);
 }
 
-.pillar-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--accent);
-    transition: gap 0.3s ease;
-}
+.metrics-bg.active { opacity: 0.18; }
 
-.pillar-card:hover .pillar-link {
-    gap: 0.7rem;
-}
-
-/* ==========================================
-   CTA SECTION
-   ========================================== */
-.cta-section {
+.metrics-stage-wrap {
     position: relative;
-    z-index: 10;
-    padding: 7rem 0;
-    background: var(--bg-secondary);
+    z-index: 1;
+    width: 100%;
+    max-width: var(--container);
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+    align-items: center;
+    gap: 6rem;
+}
+
+.metrics-side {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.metrics-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
+.metrics-counter {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+.metrics-counter .current {
+    font-size: 2rem;
+    color: var(--ink-strong);
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+    transition: all 0.5s var(--ease);
+}
+
+.metrics-counter .total { color: var(--ink-soft); }
+
+.metrics-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-top: 2rem;
+}
+
+.metrics-progress-bar {
+    height: 1px;
+    width: 100%;
+    background: var(--rule);
+    position: relative;
     overflow: hidden;
 }
 
-.cta-section::before {
+.metrics-progress-bar::after {
     content: '';
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 600px;
-    height: 600px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(56, 130, 255, 0.06) 0%, transparent 60%);
+    inset: 0;
+    background: var(--ink-strong);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.6s var(--ease);
+}
+
+.metrics-progress-bar.active::after { transform: scaleX(1); }
+.metrics-progress-bar.done::after { transform: scaleX(1); background: var(--ink-mid); }
+
+.metrics-progress-label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: color 0.4s var(--ease);
+}
+
+.metrics-progress-label.active { color: var(--ink-strong); }
+
+.metrics-stages {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.metric-stage {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s var(--ease), transform 0.9s var(--ease);
     pointer-events: none;
 }
 
-.cta-content {
-    text-align: center;
-    max-width: 600px;
-    margin: 0 auto;
-    position: relative;
+.metric-stage.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
 }
 
-.cta-content h2 {
-    font-size: clamp(2rem, 4vw, 2.75rem);
-    font-weight: 800;
-    letter-spacing: -1px;
-    margin-bottom: 1rem;
-    line-height: 1.15;
+.metric-stage.exiting {
+    opacity: 0;
+    transform: translateY(-40px);
 }
 
-.cta-content p {
-    font-size: 1.05rem;
-    color: var(--text-mid);
-    line-height: 1.7;
-    margin-bottom: 2rem;
+.metric-figure {
+    font-family: var(--serif);
+    font-variation-settings: "opsz" 144, "SOFT" 100;
+    font-weight: 200;
+    font-size: clamp(6rem, 18vw, 16rem);
+    line-height: 0.85;
+    color: var(--ink-strong);
+    letter-spacing: -0.05em;
+    margin-bottom: 1.5rem;
+    font-variant-numeric: tabular-nums;
+    display: flex;
+    align-items: baseline;
+    gap: 0.05em;
 }
 
-.cta-email {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 1.05rem;
-    color: var(--accent);
-    text-decoration: none;
-    padding: 1rem 2rem;
-    background: rgba(56, 130, 255, 0.08);
-    border: 1px solid rgba(56, 130, 255, 0.2);
-    border-radius: 12px;
-    font-family: 'DM Mono', monospace;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    letter-spacing: 0.5px;
+.metric-figure .suffix {
+    font-size: 0.4em;
+    color: var(--ink-mid);
+    font-style: italic;
+    letter-spacing: -0.02em;
+    margin-left: 0.05em;
 }
 
-.cta-email:hover {
-    background: rgba(56, 130, 255, 0.15);
-    border-color: var(--accent);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(56, 130, 255, 0.15);
+.metric-label {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 1.5rem;
+}
+
+.metric-caption {
+    font-family: var(--serif);
+    font-variation-settings: "opsz" 24, "SOFT" 80;
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+    color: var(--ink-mid);
+    max-width: 480px;
+    line-height: 1.5;
 }
 
 /* ==========================================
-   DETAIL PAGE OVERLAY
+   SYSTEM — pinned horizontal pillars (with image bands)
+   ========================================== */
+.system {
+    position: relative;
+    z-index: 2;
+    background: var(--paper-soft);
+    border-top: 1px solid var(--rule-soft);
+}
+
+.system-track { height: 700vh; position: relative; }
+
+.system-pin {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.system-header {
+    padding: 6rem 2rem 0;
+    max-width: var(--container);
+    margin: 0 auto;
+    width: 100%;
+    flex-shrink: 0;
+}
+
+.system-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.system-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 1.5rem;
+}
+
+.system-title {
+    font-family: var(--serif);
+    font-variation-settings: "opsz" 144, "SOFT" 100;
+    font-weight: 300;
+    font-size: clamp(2rem, 4.5vw, 3.75rem);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    color: var(--ink-strong);
+    max-width: 760px;
+}
+
+.system-progress {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    white-space: nowrap;
+}
+
+.system-progress .current {
+    font-size: 1.4rem;
+    color: var(--ink-strong);
+    font-variant-numeric: tabular-nums;
+    transition: color 0.3s var(--ease);
+}
+
+.system-rail {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    padding: 3rem 0;
+}
+
+.system-cards {
+    display: flex;
+    gap: 2rem;
+    padding: 0 calc((100vw - var(--container)) / 2 + 2rem);
+    transition: transform 0.05s linear;
+    will-change: transform;
+}
+
+.system-card {
+    flex: 0 0 auto;
+    width: 460px;
+    max-width: 75vw;
+    height: 580px;
+    background: var(--paper);
+    border: 1px solid var(--rule-soft);
+    color: var(--ink);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.5s var(--ease), border-color 0.5s var(--ease), transform 0.5s var(--ease);
+    display: flex;
+    flex-direction: column;
+}
+
+.system-card:hover {
+    background: var(--paper-deep);
+    border-color: var(--rule);
+}
+
+.system-card-image {
+    height: 180px;
+    width: 100%;
+    flex-shrink: 0;
+    overflow: hidden;
+    position: relative;
+    background: var(--paper-deep);
+}
+
+.system-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.5) contrast(1.05) brightness(0.95);
+    transition: transform 1.2s var(--ease), filter 0.7s var(--ease);
+}
+
+.system-card:hover .system-card-image img {
+    transform: scale(1.05);
+    filter: saturate(0.7) contrast(1.05) brightness(0.98);
+}
+
+.system-card-image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(24, 20, 16, 0.12), rgba(155, 124, 46, 0.08));
+    mix-blend-mode: multiply;
+    pointer-events: none;
+}
+
+.system-card-body {
+    padding: 2rem 2.5rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.system-card-num {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.system-card-num::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+}
+
+.system-card h3 {
+    font-family: var(--serif);
+    font-variation-settings: "opsz" 72, "SOFT" 100;
+    font-weight: 400;
+    font-size: 1.7rem;
+    line-height: 1.18;
+    letter-spacing: -0.02em;
+    color: var(--ink-strong);
+    margin-bottom: 1rem;
+}
+
+.system-card p {
+    font-family: var(--sans);
+    font-size: 0.92rem;
+    line-height: 1.7;
+    color: var(--ink-mid);
+    margin-bottom: 1.5rem;
+    flex: 1;
+}
+
+.system-card-cta {
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--ink-strong);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    border-bottom: 1px solid var(--ink-strong);
+    padding-bottom: 0.3rem;
+    align-self: flex-start;
+    transition: gap 0.4s var(--ease);
+}
+
+.system-card:hover .system-card-cta { gap: 1rem; }
+
+.system-card-cta .arrow {
+    font-family: var(--serif);
+    font-size: 1rem;
+    line-height: 0;
+    margin-bottom: 1px;
+}
+
+@media (max-width: 1024px) {
+    .system-track { height: auto; }
+    .system-pin { position: relative; height: auto; overflow: visible; }
+    .system-rail { overflow: visible; padding: 2rem 0 5rem; }
+    .system-cards { flex-direction: column; gap: 1rem; padding: 0 2rem; transform: none !important; }
+    .system-card { width: 100%; max-width: 100%; height: auto; min-height: 480px; }
+    .system-progress { display: none; }
+
+    /* keep pinned scroll on mobile — single column, centered */
+    .metrics-pin { height: 100dvh; }
+    .metrics-stage-wrap {
+        grid-template-columns: 1fr;
+        gap: 0;
+        padding: 0 1.5rem;
+        text-align: center;
+    }
+    .metrics-side { display: none; }
+    .metric-stage { align-items: center; }
+    .metric-figure { justify-content: center; font-size: clamp(4rem, 22vw, 8rem); }
+    .metric-caption { margin: 0 auto; }
+}
+
+/* ==========================================
+   CTA — with atmospheric backdrop
+   ========================================== */
+.cta-section {
+    position: relative;
+    z-index: 2;
+    padding: 5rem 2rem 4rem;
+    text-align: center;
+    border-top: 1px solid var(--rule-soft);
+    overflow: hidden;
+    background: var(--paper-soft);
+}
+
+.cta-backdrop {
+    position: absolute;
+    inset: 0;
+    background-image: url('images/cta-backdrop.jpg');
+    background-size: cover;
+    background-position: center;
+    filter: grayscale(0.95) sepia(0.55) saturate(0.6) brightness(1.05) contrast(0.95);
+    opacity: 0.18;
+    -webkit-mask-image: radial-gradient(ellipse 70% 80% at 50% 50%, black 25%, transparent 95%);
+            mask-image: radial-gradient(ellipse 70% 80% at 50% 50%, black 25%, transparent 95%);
+    z-index: 0;
+}
+
+.cta-content { position: relative; z-index: 1; }
+
+.cta-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 1rem;
+}
+
+.cta-title {
+    font-family: var(--serif);
+    font-variation-settings: "opsz" 144, "SOFT" 100;
+    font-weight: 300;
+    font-size: clamp(2rem, 4.5vw, 3.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    color: var(--ink-strong);
+    margin: 0 auto 1rem;
+    max-width: 800px;
+}
+
+.cta-title em {
+    font-style: italic;
+    color: var(--accent);
+}
+
+.cta-text {
+    font-family: var(--sans);
+    font-size: 1rem;
+    color: var(--ink-mid);
+    max-width: 540px;
+    margin: 0 auto 2rem;
+    line-height: 1.65;
+}
+
+.cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    background: var(--ink-strong);
+    color: var(--paper);
+    padding: 1rem 2rem;
+    font-family: var(--sans);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    transition: background 0.4s var(--ease), transform 0.4s var(--ease), gap 0.4s var(--ease), box-shadow 0.4s var(--ease);
+}
+
+.cta-button:hover {
+    background: var(--accent);
+    transform: translateY(-2px);
+    gap: 1rem;
+    box-shadow: 0 12px 32px rgba(24, 20, 16, 0.18);
+}
+
+.cta-button .arrow {
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    line-height: 0;
+    margin-bottom: 1px;
+}
+
+/* ==========================================
+   FOOTER
+   ========================================== */
+.footer {
+    background: var(--paper);
+    border-top: 1px solid var(--rule-soft);
+    padding: 2.5rem 2rem 1.75rem;
+    position: relative;
+    z-index: 2;
+}
+
+.footer-container { max-width: var(--container); margin: 0 auto; }
+
+.footer-top {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1.75rem;
+    gap: 1.5rem;
+    text-align: center;
+}
+
+.footer-links {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.footer-links a {
+    color: var(--ink-mid);
+    font-family: var(--sans);
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: color 0.25s var(--ease);
+    position: relative;
+}
+
+.footer-links a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    width: 100%;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.4s var(--ease);
+}
+
+.footer-links a:hover { color: var(--ink-strong); }
+.footer-links a:hover::after { transform: scaleX(1); }
+
+.footer-legal {
+    border-top: 1px solid var(--rule-soft);
+    padding-top: 1.25rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.footer-legal p {
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    line-height: 1.75;
+    max-width: 980px;
+    margin: 0 auto;
+    opacity: 0.85;
+}
+
+.footer-bottom {
+    border-top: 1px solid var(--rule-soft);
+    padding-top: 1.25rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    text-align: center;
+}
+
+.footer-bottom p {
+    font-family: var(--sans);
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+}
+
+.footer-bottom .disclaimer {
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    opacity: 0.8;
+    max-width: 540px;
+    text-align: right;
+}
+
+/* ==========================================
+   DETAIL PANEL
    ========================================== */
 .detail-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
     z-index: 2000;
-    background: rgba(4, 8, 18, 0.6);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: rgba(24, 20, 16, 0.32);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.4s ease;
+    transition: opacity 0.5s var(--ease);
 }
 
-.detail-overlay.active {
-    opacity: 1;
-    pointer-events: all;
-}
+.detail-overlay.active { opacity: 1; pointer-events: all; }
 
 .detail-panel {
     position: fixed;
@@ -697,318 +1233,272 @@ body::before {
     max-width: 720px;
     height: 100vh;
     z-index: 2001;
-    background: var(--bg-secondary);
-    border-left: 1px solid var(--border);
+    background: var(--paper);
+    border-left: 1px solid var(--rule-soft);
     transform: translateX(100%);
-    transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    transition: transform 0.7s var(--ease);
     overflow-y: auto;
     overscroll-behavior: contain;
+    box-shadow: -30px 0 80px rgba(24, 20, 16, 0.15);
 }
 
-.detail-panel.active {
-    transform: translateX(0);
+.detail-panel.active { transform: translateX(0); }
+
+.detail-panel::-webkit-scrollbar { width: 6px; }
+.detail-panel::-webkit-scrollbar-track { background: transparent; }
+.detail-panel::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 3px; }
+
+.detail-panel-inner { padding: 2.5rem 3rem 5rem; }
+
+.detail-panel-inner > * {
+    opacity: 0;
+    transform: translateY(20px);
 }
 
-.detail-panel-inner {
-    padding: 3rem 2.5rem;
+.detail-panel.active .detail-panel-inner > * {
+    animation: detailIn 0.8s var(--ease) forwards;
 }
+
+.detail-panel.active .detail-panel-inner > *:nth-child(1) { animation-delay: 0.2s; }
+.detail-panel.active .detail-panel-inner > *:nth-child(2) { animation-delay: 0.3s; }
+.detail-panel.active .detail-panel-inner > *:nth-child(3) { animation-delay: 0.4s; }
+.detail-panel.active .detail-panel-inner > *:nth-child(4) { animation-delay: 0.5s; }
+.detail-panel.active .detail-panel-inner > *:nth-child(5) { animation-delay: 0.6s; }
+.detail-panel.active .detail-panel-inner > *:nth-child(6) { animation-delay: 0.7s; }
+.detail-panel.active .detail-panel-inner > *:nth-child(7) { animation-delay: 0.8s; }
+
+@keyframes detailIn { to { opacity: 1; transform: translateY(0); } }
 
 .detail-close {
     position: sticky;
     top: 0;
     display: flex;
     justify-content: flex-end;
-    padding: 1.5rem 2.5rem 0;
+    padding: 1.5rem 3rem 0;
     z-index: 10;
+    background: linear-gradient(to bottom, var(--paper) 70%, transparent);
 }
 
 .detail-close-btn {
     width: 40px;
     height: 40px;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    background: var(--bg-card);
-    color: var(--text-mid);
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--ink-mid);
+    cursor: pointer;
+    transition: all 0.4s var(--ease);
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    line-height: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 1.2rem;
 }
 
 .detail-close-btn:hover {
-    color: var(--white);
-    border-color: var(--border-hover);
-    background: var(--bg-card-hover);
+    color: var(--ink-strong);
+    border-color: var(--ink-strong);
+    transform: rotate(90deg);
 }
 
 .detail-tag {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--accent);
+    gap: 0.6rem;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--ink-soft);
     text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-bottom: 1.25rem;
+    letter-spacing: 2.5px;
+    margin-bottom: 2rem;
 }
 
 .detail-tag::before {
     content: '';
-    width: 16px;
-    height: 2px;
-    background: var(--accent);
-    border-radius: 2px;
+    width: 24px;
+    height: 1px;
+    background: var(--rule);
 }
 
 .detail-panel h2 {
-    font-size: 2rem;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    line-height: 1.2;
-    margin-bottom: 1.5rem;
+    font-family: var(--serif);
+    font-variation-settings: "opsz" 96, "SOFT" 100;
+    font-weight: 300;
+    font-size: clamp(1.85rem, 3.4vw, 2.5rem);
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    color: var(--ink-strong);
+    margin-bottom: 2rem;
 }
 
 .detail-panel p {
-    font-size: 1.05rem;
-    color: var(--text-mid);
-    line-height: 1.8;
-    margin-bottom: 1.25rem;
+    font-family: var(--sans);
+    font-size: 1.025rem;
+    color: var(--ink);
+    line-height: 1.85;
+    margin-bottom: 1.5rem;
 }
 
 .detail-divider {
     border: none;
     height: 1px;
-    background: var(--border);
-    margin: 2rem 0;
+    background: var(--rule-soft);
+    margin: 2.75rem 0;
 }
 
 .detail-card-grid {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
     margin-top: 1.5rem;
 }
 
 .detail-mini-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.5rem;
+    background: var(--paper-soft);
+    border: 1px solid var(--rule-soft);
+    padding: 1.75rem;
+    transition: all 0.4s var(--ease);
+}
+
+.detail-mini-card:hover {
+    border-color: var(--rule);
+    background: var(--paper-deep);
 }
 
 .detail-mini-card h4 {
-    font-size: 1.05rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    color: var(--white);
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 1.1rem;
+    color: var(--ink-strong);
+    margin-bottom: 0.7rem;
+    letter-spacing: -0.01em;
 }
 
 .detail-mini-card p {
-    font-size: 0.95rem;
-    color: var(--text-dim);
-    line-height: 1.6;
+    font-size: 0.92rem;
+    color: var(--ink-mid);
+    line-height: 1.7;
     margin-bottom: 0;
 }
 
-/* ==========================================
-   FOOTER
-   ========================================== */
-.footer {
-    background: var(--bg-primary);
-    border-top: 1px solid var(--border);
-    padding: 3rem 0 2rem;
-    position: relative;
-    z-index: 10;
-}
-
-.footer-container {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0 2rem;
-}
-
-.footer-top {
-    display: flex;
-    justify-content: space-between;
+.detail-email {
+    display: inline-flex;
     align-items: center;
-    margin-bottom: 2rem;
+    gap: 0.65rem;
+    font-family: var(--serif);
+    font-variation-settings: "opsz" 72, "SOFT" 80;
+    font-weight: 400;
+    font-style: italic;
+    font-size: 1.4rem;
+    color: var(--ink-strong);
+    border-bottom: 1px solid var(--ink-strong);
+    padding-bottom: 0.3rem;
+    transition: gap 0.4s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease);
 }
 
-.footer-links {
-    display: flex;
-    gap: 1.5rem;
-}
-
-.footer-links a {
-    color: var(--text-dim);
-    text-decoration: none;
-    font-size: 0.85rem;
-    font-weight: 500;
-    transition: color 0.2s ease;
-}
-
-.footer-links a:hover {
-    color: var(--white);
-}
-
-.footer-bottom {
-    border-top: 1px solid var(--border);
-    padding-top: 1.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.footer-bottom p {
-    font-size: 0.8rem;
-    color: var(--text-dim);
-}
-
-.footer-bottom .disclaimer {
-    font-size: 0.75rem;
-    color: var(--text-dim);
-    opacity: 0.6;
+.detail-email:hover {
+    gap: 1rem;
+    color: var(--accent);
+    border-bottom-color: var(--accent);
 }
 
 /* ==========================================
-   SCROLL REVEAL
+   REVEAL
    ========================================== */
 .reveal {
     opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+    transform: translateY(28px);
+    transition: opacity 1s var(--ease), transform 1s var(--ease);
 }
 
-.reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
+.reveal.visible { opacity: 1; transform: translateY(0); }
 
 .reveal-delay-1 { transition-delay: 0.1s; }
 .reveal-delay-2 { transition-delay: 0.2s; }
-.reveal-delay-3 { transition-delay: 0.3s; }
 
 /* ==========================================
    RESPONSIVE
    ========================================== */
-@media (max-width: 1024px) {
-    .pillars-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .stats-container {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 2rem 1rem;
-    }
-}
-
 @media (max-width: 768px) {
     .nav-links {
         position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(4, 8, 18, 0.98);
-        backdrop-filter: blur(20px);
+        inset: 0;
+        background: var(--paper);
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        gap: 0.5rem;
+        gap: 1rem;
         transform: translateX(100%);
-        transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        transition: transform 0.5s var(--ease);
     }
+    .nav-links.active { transform: translateX(0); }
+    .nav-links a { font-size: 1.15rem; padding: 0.75rem 1.5rem; }
+    .nav-toggle { display: flex; }
 
-    .nav-links.active {
-        transform: translateX(0);
-    }
+    .hero { padding-top: 6.5rem; }
+    .hero-eyebrow { margin-bottom: 2rem; }
+    .hero-actions { gap: 1.5rem; flex-direction: column; }
+    .hero-horizon { height: 40%; opacity: 0.4; }
 
-    .nav-links a {
-        font-size: 1.25rem;
-        padding: 0.75rem 1.5rem;
-    }
+    .system-header { padding: 5rem 2rem 0; }
+    .system-header-row { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
 
-    .nav-toggle {
-        display: flex;
-    }
-
-    .hero-title {
-        font-size: clamp(2.5rem, 10vw, 3.5rem);
-        letter-spacing: -1.5px;
-    }
-
-    .pillars-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .stats-container {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .hero-actions {
-        flex-direction: column;
-    }
-
-    .btn {
-        width: 100%;
-        justify-content: center;
-        max-width: 280px;
-    }
-
-    .detail-panel {
-        max-width: 100%;
-    }
-
-    .detail-panel-inner {
-        padding: 2rem 1.5rem;
-    }
-
-    .footer-top {
-        flex-direction: column;
-        gap: 1.5rem;
-        align-items: flex-start;
-    }
-
-    .footer-links {
-        flex-wrap: wrap;
-    }
-
-    .footer-bottom {
-        flex-direction: column;
-        gap: 0.5rem;
-        align-items: flex-start;
-    }
+    .cta-section { padding: 6rem 2rem; }
+    .footer-top { gap: 2rem; }
+    .footer-bottom { flex-direction: column; gap: 0.75rem; }
+    .detail-panel { max-width: 100%; }
+    .detail-panel-inner { padding: 2rem 1.5rem 4rem; }
+    .detail-close { padding: 1.25rem 1.5rem 0; }
+    .detail-card-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 480px) {
-    .stat-number {
-        font-size: 2rem;
-    }
+    .metric-figure { font-size: clamp(4rem, 22vw, 7rem); }
+    .system-card-image { height: 160px; }
+    .system-card-body { padding: 1.75rem 1.75rem 2rem; }
+}
 
-    .hero-badge {
-        font-size: 0.7rem;
+/* ==========================================
+   REDUCED MOTION
+   ========================================== */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
     }
+    .metric-stage { opacity: 1; transform: none; }
+    .system-cards { transform: none !important; }
+    .hero-horizon { animation: none; }
 }
     </style>
 </head>
 <body>
 
-    <!-- Navigation -->
+    <div class="loader" id="loader">
+        <div class="logo logo--lg" aria-label="Zaminyar Holdings">
+            <span class="logo-name">Zaminyar</span>
+            <span class="logo-rule" aria-hidden="true"></span>
+            <span class="logo-holdings">Holdings</span>
+        </div>
+    </div>
+
+    <div class="scroll-progress" id="scrollProgress"></div>
+
     <nav class="nav" id="nav">
         <div class="nav-container">
-            <a href="#" class="logo">
-                <img src="zaminyar-logo.png" alt="Zaminyar Holdings" class="logo-image">
+            <a href="#" class="logo" aria-label="Zaminyar Holdings">
+                <span class="logo-name">Zaminyar</span>
+                <span class="logo-rule" aria-hidden="true"></span>
+                <span class="logo-holdings">Holdings</span>
             </a>
-            <div class="nav-toggle" id="navToggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
             <div class="nav-links" id="navLinks">
-                <a href="#pillars">What We Do</a>
+                <a href="#system">What We Do</a>
                 <a href="#" data-detail="vision">Our Vision</a>
                 <a href="#" data-detail="paradigm">The Paradigm</a>
                 <a href="#" data-detail="philosophy">Philosophy</a>
@@ -1018,147 +1508,221 @@ body::before {
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- HERO with horizon -->
     <section class="hero" id="hero">
-        <div class="hero-ambient"></div>
-        <div class="hero-grid"></div>
-        <div class="hero-glow">
-            <div class="hero-glow-inner" id="heroGlow"></div>
-        </div>
-
+        <div class="hero-horizon"></div>
         <div class="hero-content">
-            <div class="hero-badge">
-                <span class="hero-badge-dot"></span>
-                Property-Backed Wealth Infrastructure
-            </div>
-            <h1 class="hero-title">
-                Build <span class="gradient-text">Autonomous Wealth</span> Through Buy-to-Let
+            <div class="hero-eyebrow">Property-Backed Wealth Infrastructure</div>
+            <h1 class="hero-title" id="heroTitle">
+                Build <em>Autonomous Wealth</em> Through Buy-to-Let
             </h1>
+            <div class="hero-rule"></div>
             <p class="hero-subtitle">
                 A new paradigm of property-backed wealth. Engineered for scale. Built for generations. The time to build is now.
             </p>
             <div class="hero-actions">
-                <a href="#pillars" class="btn btn-primary">
+                <a href="#system" class="link-btn">
                     Explore the Model
-                    <span class="btn-arrow">&rarr;</span>
+                    <span class="arrow">&rarr;</span>
                 </a>
-                <a href="mailto:consultation@zaminyar.co.uk" class="btn btn-secondary">
+                <a href="mailto:consultation@zaminyar.co.uk" class="link-btn link-btn-quiet">
                     Contact Us
+                    <span class="arrow">&rarr;</span>
                 </a>
             </div>
         </div>
-    </section>
-
-    <!-- Stats Bar -->
-    <section class="stats-bar">
-        <div class="stats-container">
-            <div class="stat-item reveal">
-                <div class="stat-number">30yr</div>
-                <div class="stat-label">Investment Horizon</div>
-            </div>
-            <div class="stat-item reveal reveal-delay-1">
-                <div class="stat-number">2x</div>
-                <div class="stat-label">Revenue Streams</div>
-            </div>
-            <div class="stat-item reveal reveal-delay-2">
-                <div class="stat-number">100%</div>
-                <div class="stat-label">Data-Driven Decisions</div>
-            </div>
-            <div class="stat-item reveal reveal-delay-3">
-                <div class="stat-number">0</div>
-                <div class="stat-label">Manual Intervention Goal</div>
-            </div>
+        <div class="hero-scroll-cue">
+            <span>Scroll</span>
+            <div class="hero-scroll-line"></div>
         </div>
     </section>
 
-    <!-- Pillars Section -->
-    <section class="pillars" id="pillars">
-        <div class="section-container">
-            <div class="section-header reveal">
-                <div class="section-tag">How It Works</div>
-                <h2 class="section-title">A System Engineered for Autonomous Growth</h2>
-                <p class="section-desc">Strategic acquisition, intelligent automation, and tenant-centric management converge into a self-sustaining wealth engine.</p>
-            </div>
-
-            <div class="pillars-grid">
-                <div class="pillar-card reveal" data-detail="vision">
-                    <div class="pillar-icon">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
-                    </div>
-                    <h3>Self-Sustaining Ecosystems</h3>
-                    <p>Fully optimised buy-to-let ecosystems where strategic acquisition, automated cash flow, and scalable growth converge.</p>
-                    <span class="pillar-link">Explore Vision <span class="btn-arrow">&rarr;</span></span>
+    <!-- METRICS -->
+    <section class="metrics" id="metrics">
+        <div class="metrics-track" id="metricsTrack">
+            <div class="metrics-pin">
+                <div class="metrics-bgs">
+                    <div class="metrics-bg" data-bg="0" style="background-image: url('images/metric-horizon.jpg')"></div>
+                    <div class="metrics-bg" data-bg="1" style="background-image: url('images/metric-dual.jpg')"></div>
+                    <div class="metrics-bg" data-bg="2" style="background-image: url('images/metric-data.jpg')"></div>
+                    <div class="metrics-bg" data-bg="3" style="background-image: url('images/metric-void.jpg')"></div>
+                    <div class="metrics-bg" data-bg="4" style="background-image: url('images/metric-infinity.jpg')"></div>
                 </div>
+                <div class="metrics-stage-wrap">
+                    <aside class="metrics-side">
+                        <div class="metrics-eyebrow">By the numbers</div>
+                        <div class="metrics-counter">
+                            <span class="current" id="metricsCurrent">01</span>
+                            <span>/</span>
+                            <span class="total">05</span>
+                        </div>
+                        <div class="metrics-progress">
+                            <div class="metrics-progress-label" data-i="0">Investment Horizon</div>
+                            <div class="metrics-progress-bar" data-i="0"></div>
+                            <div class="metrics-progress-label" data-i="1">Revenue Streams</div>
+                            <div class="metrics-progress-bar" data-i="1"></div>
+                            <div class="metrics-progress-label" data-i="2">Data-Driven Decisions</div>
+                            <div class="metrics-progress-bar" data-i="2"></div>
+                            <div class="metrics-progress-label" data-i="3">Manual Intervention Goal</div>
+                            <div class="metrics-progress-bar" data-i="3"></div>
+                            <div class="metrics-progress-label" data-i="4">Compounding Effect</div>
+                            <div class="metrics-progress-bar" data-i="4"></div>
+                        </div>
+                    </aside>
 
-                <div class="pillar-card reveal reveal-delay-1" data-detail="paradigm">
-                    <div class="pillar-icon">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    <div class="metrics-stages">
+                        <div class="metric-stage active" data-stage="0">
+                            <div class="metric-label">Investment Horizon</div>
+                            <div class="metric-figure"><span data-figure="30">30</span><span class="suffix">yr</span></div>
+                            <p class="metric-caption">Engineered over a thirty-year horizon &mdash; long enough for compounding to do the work, short enough to remain answerable to a generation.</p>
+                        </div>
+                        <div class="metric-stage" data-stage="1">
+                            <div class="metric-label">Revenue Streams</div>
+                            <div class="metric-figure"><span data-figure="2">2</span><span class="suffix">x</span></div>
+                            <p class="metric-caption">Steady rental income, paired with property appreciation. Two reinforcing currents &mdash; not one stream subject to one weather.</p>
+                        </div>
+                        <div class="metric-stage" data-stage="2">
+                            <div class="metric-label">Data-Driven Decisions</div>
+                            <div class="metric-figure"><span data-figure="100">100</span><span class="suffix">%</span></div>
+                            <p class="metric-caption">Every acquisition, every decision: filtered through algorithmic analysis across dozens of variables. Conviction grounded in evidence.</p>
+                        </div>
+                        <div class="metric-stage" data-stage="3">
+                            <div class="metric-label">Manual Intervention Goal</div>
+                            <div class="metric-figure"><span data-figure="0">0</span></div>
+                            <p class="metric-caption">The destination is autonomy. A system that compounds without you tending it &mdash; wealth that works while you don't.</p>
+                        </div>
+                        <div class="metric-stage" data-stage="4">
+                            <div class="metric-label">Compounding Effect</div>
+                            <div class="metric-figure"><span>&infin;</span></div>
+                            <p class="metric-caption">Compounding doesn't stop when you do. The system keeps building &mdash; quietly, indefinitely, without permission.</p>
+                        </div>
                     </div>
-                    <h3>Dual Growth Path</h3>
-                    <p>BTL investments deliver steady rental income and property appreciation, enhanced by strategic mortgage financing.</p>
-                    <span class="pillar-link">Explore Paradigm <span class="btn-arrow">&rarr;</span></span>
-                </div>
-
-                <div class="pillar-card reveal reveal-delay-2" data-detail="philosophy">
-                    <div class="pillar-icon">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-                    </div>
-                    <h3>Systematic Scaling</h3>
-                    <p>Data intelligence and automation transform real estate into a self-sustaining financial instrument at scale.</p>
-                    <span class="pillar-link">Explore Philosophy <span class="btn-arrow">&rarr;</span></span>
-                </div>
-
-                <div class="pillar-card reveal reveal-delay-1" data-detail="intelligence">
-                    <div class="pillar-icon">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
-                    </div>
-                    <h3>Intelligence-Driven Acquisition</h3>
-                    <p>Extensive algorithmic analysis across dozens of variables identifies optimal acquisitions and maximises returns.</p>
-                    <span class="pillar-link">Explore Intelligence <span class="btn-arrow">&rarr;</span></span>
-                </div>
-
-                <div class="pillar-card reveal reveal-delay-2" data-detail="tenants">
-                    <div class="pillar-icon">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                    </div>
-                    <h3>Tenant-Centric Growth</h3>
-                    <p>Tenant satisfaction drives long-term occupancy and portfolio stability, forming the cornerstone of sustainable wealth.</p>
-                    <span class="pillar-link">Explore Tenant Care <span class="btn-arrow">&rarr;</span></span>
-                </div>
-
-                <div class="pillar-card reveal reveal-delay-3" data-detail="contact">
-                    <div class="pillar-icon">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                    </div>
-                    <h3>Start a Conversation</h3>
-                    <p>Discuss how Zaminyar's autonomous wealth architecture can be applied to your property portfolio.</p>
-                    <span class="pillar-link">Get in Touch <span class="btn-arrow">&rarr;</span></span>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA Section -->
+    <!-- SYSTEM with image bands -->
+    <section class="system" id="system">
+        <div class="system-track" id="systemTrack">
+            <div class="system-pin">
+                <header class="system-header">
+                    <div class="system-header-row">
+                        <div>
+                            <div class="system-eyebrow">How It Works</div>
+                            <h2 class="system-title">A System Engineered for Autonomous Growth</h2>
+                        </div>
+                        <div class="system-progress">
+                            <span class="current" id="systemCurrent">01</span>
+                            <span>/</span>
+                            <span>06</span>
+                        </div>
+                    </div>
+                </header>
+                <div class="system-rail">
+                    <div class="system-cards" id="systemCards">
+
+                        <div class="system-card" data-detail="vision">
+                            <div class="system-card-image">
+                                <img src="images/card-vision.jpg" alt="" loading="lazy">
+                            </div>
+                            <div class="system-card-body">
+                                <div class="system-card-num">01 / Vision</div>
+                                <h3>Self-Sustaining Ecosystems</h3>
+                                <p>Fully optimised buy-to-let ecosystems where strategic acquisition, automated cash flow, and scalable growth converge.</p>
+                                <span class="system-card-cta">Explore Vision <span class="arrow">&rarr;</span></span>
+                            </div>
+                        </div>
+
+                        <div class="system-card" data-detail="paradigm">
+                            <div class="system-card-image">
+                                <img src="images/card-paradigm.jpg" alt="" loading="lazy">
+                            </div>
+                            <div class="system-card-body">
+                                <div class="system-card-num">02 / Paradigm</div>
+                                <h3>Dual Growth Path</h3>
+                                <p>BTL investments deliver steady rental income and property appreciation, enhanced by strategic mortgage financing.</p>
+                                <span class="system-card-cta">Explore Paradigm <span class="arrow">&rarr;</span></span>
+                            </div>
+                        </div>
+
+                        <div class="system-card" data-detail="philosophy">
+                            <div class="system-card-image">
+                                <img src="images/card-philosophy.jpg" alt="" loading="lazy">
+                            </div>
+                            <div class="system-card-body">
+                                <div class="system-card-num">03 / Philosophy</div>
+                                <h3>Systematic Scaling</h3>
+                                <p>Data intelligence and automation transform real estate into a self-sustaining financial instrument at scale.</p>
+                                <span class="system-card-cta">Explore Philosophy <span class="arrow">&rarr;</span></span>
+                            </div>
+                        </div>
+
+                        <div class="system-card" data-detail="intelligence">
+                            <div class="system-card-image">
+                                <img src="images/card-intelligence.jpg" alt="" loading="lazy">
+                            </div>
+                            <div class="system-card-body">
+                                <div class="system-card-num">04 / Intelligence</div>
+                                <h3>Intelligence-Driven Acquisition</h3>
+                                <p>Extensive algorithmic analysis across dozens of variables identifies optimal acquisitions and maximises returns.</p>
+                                <span class="system-card-cta">Explore Intelligence <span class="arrow">&rarr;</span></span>
+                            </div>
+                        </div>
+
+                        <div class="system-card" data-detail="tenants">
+                            <div class="system-card-image">
+                                <img src="images/card-tenants.jpg" alt="" loading="lazy">
+                            </div>
+                            <div class="system-card-body">
+                                <div class="system-card-num">05 / Tenants</div>
+                                <h3>Tenant-Centric Growth</h3>
+                                <p>Tenant satisfaction drives long-term occupancy and portfolio stability, forming the cornerstone of sustainable wealth.</p>
+                                <span class="system-card-cta">Explore Tenant Care <span class="arrow">&rarr;</span></span>
+                            </div>
+                        </div>
+
+                        <div class="system-card" data-detail="contact">
+                            <div class="system-card-image">
+                                <img src="images/card-contact.jpg" alt="" loading="lazy">
+                            </div>
+                            <div class="system-card-body">
+                                <div class="system-card-num">06 / Contact</div>
+                                <h3>Start a Conversation</h3>
+                                <p>Discuss how Zaminyar's autonomous wealth architecture can be applied to your property portfolio.</p>
+                                <span class="system-card-cta">Get in Touch <span class="arrow">&rarr;</span></span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA with backdrop -->
     <section class="cta-section" id="contact">
-        <div class="section-container">
-            <div class="cta-content reveal">
-                <div class="section-tag">Get Started</div>
-                <h2>Ready to Build Generational Wealth?</h2>
-                <p>To discuss how Zaminyar's autonomous wealth architecture can be applied to your property portfolio:</p>
-                <a href="mailto:consultation@zaminyar.co.uk" class="cta-email">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                    consultation@zaminyar.co.uk
+        <div class="cta-backdrop"></div>
+        <div class="cta-content">
+            <div class="cta-eyebrow reveal">Get Started</div>
+            <h2 class="cta-title reveal reveal-delay-1">Ready to Build <em>Generational Wealth?</em></h2>
+            <p class="cta-text reveal reveal-delay-2">To discuss how Zaminyar's autonomous wealth architecture can be applied to your property portfolio:</p>
+            <div class="reveal reveal-delay-2" style="margin-top: 0.5rem;">
+                <a href="mailto:consultation@zaminyar.co.uk" class="cta-button">
+                    Get in Touch
+                    <span class="arrow">&rarr;</span>
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="footer-container">
             <div class="footer-top">
-                <a href="#" class="logo">
-                    <img src="zaminyar-logo.png" alt="Zaminyar Holdings" class="logo-image">
+                <a href="#" class="logo" aria-label="Zaminyar Holdings">
+                    <span class="logo-name">Zaminyar</span>
+                    <span class="logo-rule" aria-hidden="true"></span>
+                    <span class="logo-holdings">Holdings</span>
                 </a>
                 <div class="footer-links">
                     <a href="#" data-detail="vision">Our Vision</a>
@@ -1169,23 +1733,22 @@ body::before {
                     <a href="#contact">Contact</a>
                 </div>
             </div>
+            <div class="footer-legal">
+                <p>This website is published by Zaminyar Holdings Limited for general informational purposes only. Nothing on this site constitutes financial, investment, legal, or tax advice, an offer or solicitation to buy or sell any security or investment product, or a guarantee of any specific outcome. Forward-looking statements reflect current strategy and are subject to change without notice; past performance is not indicative of future results. Descriptions of property standards, maintenance practices, tenant services, and pricing reflect the firm's general approach and do not form part of any tenancy agreement or other contract; the rights and obligations of any tenancy are governed exclusively by the relevant signed agreement.</p>
+            </div>
             <div class="footer-bottom">
                 <p>Copyright &copy; 2025 Zaminyar Holdings Limited &mdash; All Rights Reserved.</p>
-                <p class="disclaimer">The content presented is for informational purposes only and does not constitute financial advice.</p>
             </div>
         </div>
     </footer>
 
-    <!-- Detail Overlay -->
+    <!-- DETAIL PANEL -->
     <div class="detail-overlay" id="detailOverlay"></div>
-
-    <!-- Detail Panels -->
     <div class="detail-panel" id="detailPanel">
         <div class="detail-close">
-            <button class="detail-close-btn" id="detailClose">&times;</button>
+            <button class="detail-close-btn" id="detailClose" aria-label="Close panel">&times;</button>
         </div>
 
-        <!-- Vision -->
         <div class="detail-panel-inner detail-page" id="detail-vision" style="display:none;">
             <div class="detail-tag">Our Vision</div>
             <h2>Architecting Self-Sustaining Buy-to-Let Ecosystems</h2>
@@ -1194,25 +1757,22 @@ body::before {
             <p>The approach leverages yield compounding, debt amortisation mechanics, and market-responsive asset allocation, minimising owner intervention while maximising long-term capital appreciation.</p>
         </div>
 
-        <!-- Paradigm -->
         <div class="detail-panel-inner detail-page" id="detail-paradigm" style="display:none;">
             <div class="detail-tag">The Paradigm</div>
             <h2>A New Era of Financial Evolution</h2>
             <p>An investment strategy that safeguards capital while amplifying its growth exponentially. Traditional asset classes such as equities and bonds often fall short amid market volatility and unpredictable yields, providing little in the way of tangible security and liquidity.</p>
-            <p>In contrast, BTL investments offer dual revenue streams—steady rental income and property appreciation—further enhanced by strategic mortgage financing and liquidity management.</p>
+            <p>In contrast, BTL investments offer dual revenue streams&mdash;steady rental income and property appreciation&mdash;further enhanced by strategic mortgage financing and liquidity management.</p>
             <p>A state-of-the-art mathematical framework underscores the transformative potential of BTL investments, positioning them as a revolutionary alternative in today's dynamic financial landscape.</p>
         </div>
 
-        <!-- Philosophy -->
         <div class="detail-panel-inner detail-page" id="detail-philosophy" style="display:none;">
             <div class="detail-tag">Philosophy</div>
             <h2>Scaling Buy-to-Let into an Autonomous Wealth System</h2>
             <p>Zaminyar Holdings redefines wealth creation through a new paradigm: scaling buy-to-let property into an autonomous wealth system over a 30-year horizon.</p>
             <p>Leveraging data intelligence and automation, the model transforms real estate into a self-sustaining financial instrument, outpacing outdated, manual investment models.</p>
-            <p>This isn't traditional property management—it's engineered wealth creation through systematic portfolio optimisation and tenant-supported equity accumulation.</p>
+            <p>This isn't traditional property management&mdash;it's engineered wealth creation through systematic portfolio optimisation and tenant-supported equity accumulation.</p>
         </div>
 
-        <!-- Intelligence -->
         <div class="detail-panel-inner detail-page" id="detail-intelligence" style="display:none;">
             <div class="detail-tag">Intelligence-Driven Acquisition</div>
             <h2>Data-Driven Precision in Every Decision</h2>
@@ -1238,7 +1798,6 @@ body::before {
             </div>
         </div>
 
-        <!-- Tenants -->
         <div class="detail-panel-inner detail-page" id="detail-tenants" style="display:none;">
             <div class="detail-tag">The Foundation of Wealth</div>
             <h2>Tenant Satisfaction Drives Long-Term Success</h2>
@@ -1251,7 +1810,7 @@ body::before {
                 </div>
                 <div class="detail-mini-card">
                     <h4>Continuous Property Upgrades</h4>
-                    <p>Modern kitchens, efficient heating systems, and quality appliances aren't luxuries—they're investments in tenant retention that drive multi-year tenancies and portfolio stability.</p>
+                    <p>Modern kitchens, efficient heating systems, and quality appliances aren't luxuries&mdash;they're investments in tenant retention that drive multi-year tenancies and portfolio stability.</p>
                 </div>
                 <div class="detail-mini-card">
                     <h4>Responsive Communication</h4>
@@ -1264,85 +1823,242 @@ body::before {
             </div>
         </div>
 
-        <!-- Contact -->
         <div class="detail-panel-inner detail-page" id="detail-contact" style="display:none;">
             <div class="detail-tag">Contact Us</div>
             <h2>Get in Touch</h2>
             <p>To discuss how Zaminyar's autonomous wealth architecture can be applied to your property portfolio:</p>
-            <a href="mailto:consultation@zaminyar.co.uk" class="cta-email" style="margin-top: 1rem;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <a href="mailto:consultation@zaminyar.co.uk" class="detail-email">
                 consultation@zaminyar.co.uk
+                <span style="font-family: var(--serif); font-style: normal;">&rarr;</span>
             </a>
         </div>
     </div>
 
     <script>
-/* ==========================================
-   MOUSE-TRACKING HERO GLOW
-   ========================================== */
-const heroGlow = document.getElementById('heroGlow');
-const hero = document.querySelector('.hero');
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-hero.addEventListener('mousemove', (e) => {
-    const rect = hero.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    heroGlow.style.left = x + 'px';
-    heroGlow.style.top = y + 'px';
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        document.getElementById('loader').classList.add('done');
+    }, 800);
 });
 
-/* ==========================================
-   NAV SCROLL EFFECT
-   ========================================== */
+(function splitTitle() {
+    const title = document.getElementById('heroTitle');
+    if (!title) return;
+    const html = title.innerHTML;
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    let i = 0;
+    const out = document.createElement('div');
+    function walk(src, dst) {
+        src.childNodes.forEach(node => {
+            if (node.nodeType === Node.TEXT_NODE) {
+                const parts = node.textContent.split(/(\s+)/);
+                parts.forEach(p => {
+                    if (p.trim() === '') {
+                        dst.appendChild(document.createTextNode(p));
+                    } else {
+                        const w = document.createElement('span');
+                        w.className = 'word';
+                        const inner = document.createElement('span');
+                        inner.textContent = p;
+                        inner.style.animationDelay = (0.55 + i * 0.08) + 's';
+                        i++;
+                        w.appendChild(inner);
+                        dst.appendChild(w);
+                    }
+                });
+            } else {
+                const clone = node.cloneNode(false);
+                dst.appendChild(clone);
+                walk(node, clone);
+            }
+        });
+    }
+    walk(tmp, out);
+    title.innerHTML = out.innerHTML;
+})();
+
+const scrollProgress = document.getElementById('scrollProgress');
+function updateScrollProgress() {
+    const h = document.documentElement;
+    const scrolled = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+    scrollProgress.style.width = scrolled + '%';
+}
+window.addEventListener('scroll', updateScrollProgress, { passive: true });
+
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 50);
-});
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
 
-/* ==========================================
-   MOBILE NAV
-   ========================================== */
+const sectionLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+const navObs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            sectionLinks.forEach(link => {
+                const href = link.getAttribute('href').slice(1);
+                link.classList.toggle('active-section', href === entry.target.id);
+            });
+        }
+    });
+}, { rootMargin: '-45% 0px -50% 0px' });
+document.querySelectorAll('section[id]').forEach(s => navObs.observe(s));
+
 const navToggle = document.getElementById('navToggle');
 const navLinks = document.getElementById('navLinks');
-
 navToggle.addEventListener('click', () => {
     navToggle.classList.toggle('active');
     navLinks.classList.toggle('active');
 });
 
-/* ==========================================
-   SCROLL REVEAL
-   ========================================== */
-const observer = new IntersectionObserver((entries) => {
+const revealObs = new IntersectionObserver(entries => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             entry.target.classList.add('visible');
+            revealObs.unobserve(entry.target);
         }
     });
-}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+}, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+(function metricsScroll() {
+    const track = document.getElementById('metricsTrack');
+    if (!track) return;
+    const stages = track.querySelectorAll('.metric-stage');
+    const progressBars = track.querySelectorAll('.metrics-progress-bar');
+    const progressLabels = track.querySelectorAll('.metrics-progress-label');
+    const currentLabel = document.getElementById('metricsCurrent');
+    const bgs = track.querySelectorAll('.metrics-bg');
+    const NUM_STAGES = stages.length;
+    const easeOut = t => 1 - Math.pow(1 - t, 3);
+    let currentStage = -1;
+    const figureAnimated = new Set();
 
-/* ==========================================
-   SMOOTH SCROLL
-   ========================================== */
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
+    function animateFigure(figureEl) {
+        if (figureAnimated.has(figureEl)) return;
+        figureAnimated.add(figureEl);
+        const target = parseInt(figureEl.dataset.figure, 10);
+        if (target === 0) { figureEl.textContent = '0'; return; }
+        const duration = 1100;
+        const start = performance.now();
+        function frame(now) {
+            const t = Math.min((now - start) / duration, 1);
+            figureEl.textContent = Math.round(easeOut(t) * target);
+            if (t < 1) requestAnimationFrame(frame);
+        }
+        requestAnimationFrame(frame);
+    }
+
+    function setStage(idx) {
+        stages.forEach((s, i) => {
+            s.classList.remove('active', 'exiting');
+            if (i === idx) s.classList.add('active');
+            else if (i < idx) s.classList.add('exiting');
+        });
+        progressBars.forEach((b, i) => {
+            b.classList.remove('active', 'done');
+            if (i === idx) b.classList.add('active');
+            else if (i < idx) b.classList.add('done');
+        });
+        progressLabels.forEach((l, i) => {
+            l.classList.toggle('active', i === idx);
+        });
+        bgs.forEach((b, i) => {
+            b.classList.toggle('active', i === idx);
+        });
+        currentLabel.textContent = String(idx + 1).padStart(2, '0');
+        const fig = stages[idx].querySelector('[data-figure]');
+        if (fig) animateFigure(fig);
+        currentStage = idx;
+    }
+
+    function update() {
+        const rect = track.getBoundingClientRect();
+        const trackHeight = rect.height;
+        const viewportH = window.innerHeight;
+        const totalScroll = trackHeight - viewportH;
+        const scrolled = -rect.top;
+        if (scrolled < 0 || scrolled > totalScroll) {
+            if (scrolled < 0 && currentStage !== 0) setStage(0);
+            else if (scrolled > totalScroll && currentStage !== NUM_STAGES - 1) setStage(NUM_STAGES - 1);
+            return;
+        }
+        const progress = scrolled / totalScroll;
+        const stageIndex = Math.min(NUM_STAGES - 1, Math.floor(progress * NUM_STAGES));
+        if (stageIndex !== currentStage) setStage(stageIndex);
+    }
+
+    setStage(0);
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            requestAnimationFrame(() => { update(); ticking = false; });
+            ticking = true;
+        }
+    }, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+})();
+
+(function systemScroll() {
+    const track = document.getElementById('systemTrack');
+    const cards = document.getElementById('systemCards');
+    const currentLabel = document.getElementById('systemCurrent');
+    if (!track || !cards) return;
+    const cardEls = cards.querySelectorAll('.system-card');
+
+    function update() {
+        if (window.innerWidth <= 1024) {
+            cards.style.transform = '';
+            return;
+        }
+        const rect = track.getBoundingClientRect();
+        const trackHeight = rect.height;
+        const viewportH = window.innerHeight;
+        const totalScroll = trackHeight - viewportH;
+        const scrolled = -rect.top;
+        if (scrolled < 0) {
+            cards.style.transform = 'translateX(0)';
+            currentLabel.textContent = '01';
+            return;
+        }
+        const progress = Math.max(0, Math.min(1, scrolled / totalScroll));
+        const cardsTotalWidth = cards.scrollWidth;
+        const visibleWidth = cards.parentElement.clientWidth;
+        const maxTranslate = Math.max(0, cardsTotalWidth - visibleWidth);
+        const translate = -progress * maxTranslate;
+        cards.style.transform = `translateX(${translate}px)`;
+        const idx = Math.min(cardEls.length, Math.floor(progress * cardEls.length) + 1);
+        currentLabel.textContent = String(idx).padStart(2, '0');
+    }
+
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            requestAnimationFrame(() => { update(); ticking = false; });
+            ticking = true;
+        }
+    }, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+})();
+
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', function(e) {
         const href = this.getAttribute('href');
         if (href === '#') return;
         e.preventDefault();
-        const target = document.querySelector(href);
-        if (target) {
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const t = document.querySelector(href);
+        if (t) {
+            t.scrollIntoView({ behavior: 'smooth', block: 'start' });
             navLinks.classList.remove('active');
             navToggle.classList.remove('active');
         }
     });
 });
 
-/* ==========================================
-   DETAIL PANEL SYSTEM
-   ========================================== */
 const detailOverlay = document.getElementById('detailOverlay');
 const detailPanel = document.getElementById('detailPanel');
 const detailClose = document.getElementById('detailClose');
@@ -1353,6 +2069,8 @@ function openDetail(id) {
     const target = document.getElementById('detail-' + id);
     if (target) {
         target.style.display = 'block';
+        detailPanel.classList.remove('active');
+        void detailPanel.offsetWidth;
         detailOverlay.classList.add('active');
         detailPanel.classList.add('active');
         detailPanel.scrollTop = 0;
@@ -1366,13 +2084,11 @@ function closeDetail() {
     document.body.style.overflow = '';
 }
 
-// Click handlers for detail triggers
 document.querySelectorAll('[data-detail]').forEach(el => {
     el.addEventListener('click', (e) => {
         e.preventDefault();
         const id = el.getAttribute('data-detail');
         if (id === 'contact') {
-            // For contact, just scroll to CTA section instead of opening panel
             document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
             navLinks.classList.remove('active');
             navToggle.classList.remove('active');
@@ -1386,8 +2102,6 @@ document.querySelectorAll('[data-detail]').forEach(el => {
 
 detailClose.addEventListener('click', closeDetail);
 detailOverlay.addEventListener('click', closeDetail);
-
-// ESC key closes panel
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeDetail();
 });
